@@ -51,3 +51,19 @@ f = open("deserres.json","w+")
 f.write(json.dumps(list(product_map.values())))
 f.close()
 
+#https://wallacks.com/collections - paginated tables
+#	https://wallacks.com/collections/adhesives?page=2
+
+#https://www.staples.ca/en/Arts-Crafts/cat_CG2623_2-CA_1_20001
+#https://www.staples.ca/en/Office-Supplies/cat_SC5218_2-CA_1_20001
+
+#https://www.currys.com/catalogpc.htm?Category=shop_by_brand - normal crawler
+
+#https://store.abovegroundartsupplies.com/pages/shop_by_category.html
+#	https://store.abovegroundartsupplies.com/departments/charcoal-%7CC1.html?top=0
+
+# http://www.jerrysartarama.com/all-products
+#	http://www.jerrysartarama.com/all-products?p=2
+
+#http://www.artshack.ca/index.php/art-supplies.html
+#	http://www.artshack.ca/index.php/art-supplies.html?p=2

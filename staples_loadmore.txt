@@ -1,0 +1,23 @@
+FORM DATA:
+fids: 
+selectedFacets: 
+engineSpecificFacets: 
+pn: 1 #increment here
+sr: true
+sby: 
+catalogId: 20051
+storeId: 20001
+searchTerm: 
+languageId: 1
+geoZoneId: 1
+min: 
+myStoreId: 
+max: 
+pageName: ClassPage
+categoryId: 
+urlKeywords: 
+seoPageIndexFlagValue: 
+categoryGroupId: CL200870
+headerFooterFromB: true
+
+https://www.staples.ca/search/loadMore
