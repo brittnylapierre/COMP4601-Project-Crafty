@@ -10,46 +10,47 @@ from seleniumrequests import Chrome, Safari
 import requests
 import re
 
-url = "https://www.deserres.ca/en/brands"
-res =  requests.get(url);
-soup = BeautifulSoup(res.text, "lxml")
+def scrapeDeserres():
+	url = "https://www.deserres.ca/en/brands"
+	res =  requests.get(url);
+	soup = BeautifulSoup(res.text, "lxml")
 
-raw_links = soup.find_all("a", href=re.compile("brands\/"))
+	raw_links = soup.find_all("a", href=re.compile("brands\/"))
 
-brand_links = []
-product_links = [] 
-product_map = {}
+	brand_links = []
+	product_links = [] 
+	product_map = {}
 
-for a in raw_links:
-	if a['href'] not in brand_links:
-		brand_links.append(a['href'])
-		res =  requests.get(a['href']+"?limit=all")
-		pageSoup = BeautifulSoup(res.text, "lxml")
-		product_headers = pageSoup.find_all("h2", {"class": "product-name"})
-		for h2 in product_headers:
-			raw_product_links = h2.find_all("a")
-			for product_link in raw_product_links:
-				if product_link['href'] not in product_links:
-					product_links.append(product_link['href'])
-					if product_link['data-price']:
-						product_map[product_link['href']] = {
-							'title': product_link.contents[0],
-							'description': "",
-							'price': product_link['data-price'],
-							'url': product_link['href'],
-							'brand': product_link['data-brand'],
-							'store': "Deserres"
-						}
-					else:
-						print("error")
-						print(product_link.contents)
-						break
-#print(product_map)
-print("Done Deserres!!")
-#Save our results
-f = open("deserres.json","w+")
-f.write(json.dumps(list(product_map.values())))
-f.close()
+	for a in raw_links:
+		if a['href'] not in brand_links:
+			brand_links.append(a['href'])
+			res =  requests.get(a['href']+"?limit=all")
+			pageSoup = BeautifulSoup(res.text, "lxml")
+			product_headers = pageSoup.find_all("h2", {"class": "product-name"})
+			for h2 in product_headers:
+				raw_product_links = h2.find_all("a")
+				for product_link in raw_product_links:
+					if product_link['href'] not in product_links:
+						product_links.append(product_link['href'])
+						if product_link['data-price']:
+							product_map[product_link['href']] = {
+								'title': product_link.contents[0],
+								'description': "",
+								'price': product_link['data-price'],
+								'url': product_link['href'],
+								'brand': product_link['data-brand'],
+								'store': "Deserres"
+							}
+						else:
+							print("error")
+							print(product_link.contents)
+							break
+	#print(product_map)
+	print("Done Deserres!!")
+	#Save our results
+	f = open("deserres.json","w+")
+	f.write(json.dumps(list(product_map.values())))
+	f.close()
 
 #https://wallacks.com/collections - paginated tables
 #	https://wallacks.com/collections/adhesives?page=2
