@@ -54,17 +54,34 @@ def scrapeDeserres():
 
 #https://wallacks.com/collections - paginated tables
 #	https://wallacks.com/collections/adhesives?page=2
+def scrapeWallacks():
+	url = "https://wallacks.com/collections"
+	print("Done Wallacks!!")
 
-#https://www.staples.ca/en/Arts-Crafts/cat_CG2623_2-CA_1_20001
-#https://www.staples.ca/en/Office-Supplies/cat_SC5218_2-CA_1_20001
-
-#https://www.currys.com/catalogpc.htm?Category=shop_by_brand - normal crawler
-
-#https://store.abovegroundartsupplies.com/pages/shop_by_category.html
-#	https://store.abovegroundartsupplies.com/departments/charcoal-%7CC1.html?top=0
-
-# http://www.jerrysartarama.com/all-products
+#http://www.jerrysartarama.com/all-products
 #	http://www.jerrysartarama.com/all-products?p=2
+def scrapeJerrysartarama():
+	url = "http://www.jerrysartarama.com/all-products"
+	print("Done Jerrysartarama!!")
 
 #http://www.artshack.ca/index.php/art-supplies.html
 #	http://www.artshack.ca/index.php/art-supplies.html?p=2
+def scrapeArtshack():
+	url = "http://www.artshack.ca/index.php/art-supplies.html"
+	print("Done Artshack!!")
+
+#https://store.abovegroundartsupplies.com/pages/shop_by_category.html
+#	https://store.abovegroundartsupplies.com/departments/charcoal-%7CC1.html?top=0
+def scrapeAbovegroundartsupplies():
+	url = "https://store.abovegroundartsupplies.com/pages/shop_by_category.html"
+	print("Done Abovegroundartsupplies!!")
+
+#https://www.staples.ca/en/Arts-Crafts/cat_CG2623_2-CA_1_20001
+#https://www.staples.ca/en/Office-Supplies/cat_SC5218_2-CA_1_20001
+def scrapeStaples():
+	url = "https://www.staples.ca/en/Arts-Crafts/cat_CG2623_2-CA_1_20001"
+	print("Done Staples!!")
+
+#https://www.currys.com/catalogpc.htm?Category=shop_by_brand - too old and gross to scrape
+#def scrapeCurrys():
+#	print("Done Currys!!")
