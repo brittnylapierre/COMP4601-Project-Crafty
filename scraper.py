@@ -44,10 +44,10 @@ for a in raw_links:
 						print("error")
 						print(product_link.contents)
 						break
-print(product_map)
+#print(product_map)
 print("Done Deserres!!")
 #Save our results
 f = open("deserres.json","w+")
-f.write(json.dumps(product_map.values()))
+f.write(json.dumps(list(product_map.values())))
 f.close()
 
