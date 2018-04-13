@@ -113,14 +113,43 @@ def scrapeAboveGroundArtSupplies():
 	f.write(json.dumps(products))
 	f.close()
 	print("Done Above ground art supplies!!")
-
-scrapeAboveGroundArtSupplies()
+#scrapeAboveGroundArtSupplies()
 
 #http://www.artshack.ca/index.php/art-supplies.html
-#	http://www.artshack.ca/index.php/art-supplies.html?p=2
+#	http://www.artshack.ca/index.php/art-supplies.html?p=1 to
+#   http://www.artshack.ca/index.php/art-supplies.html?p=61
 def scrapeArtshack():
 	url = "http://www.artshack.ca/index.php/art-supplies.html"
-	print("Done Art shack!!")
+	products = []
+	product_links = []
+	for i  in range(1, 62):
+		res =  requests.get(url + "?p=" + str(i));
+		soup = BeautifulSoup(res.text, "lxml")
+		product_containers = soup.find_all("div", {"class": "product-container"})
+		#product-name
+		for product_container in product_containers:
+			names = product_container.find_all("h2", {"class": "product-name"})
+			prices = product_container.find_all("span", {"class": "price"})
+			if len(names) and len(prices):
+				links = names[0].find_all("a")
+				if len(links) and links[0]['href'] not in product_links:
+					product_links.append(links[0]['href'])
+					print(links[0]['href'])
+					products.append({
+						'title': links[0].contents[0],
+						'description': "",
+						'price': prices[0].contents[0],
+						'url': links[0]['href'],
+						'brand': "",
+						'store': "Art Shack"
+					})
+	print(products)
+	#Save our results
+	f = open("artshack.json","w+")
+	f.write(json.dumps(products))
+	f.close()
+	print("Done Art Shack!!")
+scrapeArtshack()
 
 #http://www.jerrysartarama.com/all-products
 #	http://www.jerrysartarama.com/all-products?p=2
