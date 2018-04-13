@@ -149,25 +149,82 @@ def scrapeArtshack():
 	f.write(json.dumps(products))
 	f.close()
 	print("Done Art Shack!!")
-scrapeArtshack()
+#scrapeArtshack()
 
 #http://www.jerrysartarama.com/all-products
 #	http://www.jerrysartarama.com/all-products?p=2
-def scrapeJerrysartarama():
-	url = "http://www.jerrysartarama.com/all-products"
-	print("Done Jerrys artarama!!")
-
+def scrapeJerrysArtarama():
+	url = "http://www.jerrysartarama.com/all-products" 
+	products = []
+	product_links = []
+	for i  in range(1, 66):
+		res =  requests.get(url + "?p=" + str(i));
+		soup = BeautifulSoup(res.text, "lxml")
+		product_containers = soup.find_all("div", {"class": "product-info"})
+		for product_container in product_containers:
+			names = product_container.find_all("h2", {"class": "product-name"})
+			prices = product_container.find_all("p", {"class": "minimal-price"})
+			if len(names) and len(prices):
+				prices = prices[0].find_all("span", {"class" : "price"})
+				links = names[0].find_all("a")
+				if len(links) and links[0]['href'] not in product_links:
+					product_links.append(links[0]['href'])
+					print(links[0]['href'] + " " + prices[0].contents[0])
+					products.append({
+						'title': links[0].contents[0],
+						'description': "",
+						'price': prices[0].contents[0],
+						'url': links[0]['href'],
+						'brand': "",
+						'store': "Jerrys"
+					})
+	print(products)
+	#Save our results
+	f = open("jerrys_USA.json","w+")
+	f.write(json.dumps(products))
+	f.close()
+	print("Done Jerrys Artarama!!")
+#scrapeJerrysArtarama()
 #https://wallacks.com/collections - paginated tables
 #	https://wallacks.com/collections/adhesives?page=2
 def scrapeWallacks():
-	url = "https://wallacks.com/collections"
+	url = "https://wallacks.com/search?q=%2A&type=product" #search with a regex *
+	products = []
+	product_links = []
+	for i in range (1, 64):
+		res =  requests.get(url + "&page=" + str(i));
+		soup = BeautifulSoup(res.text, "lxml")
+		product_containers = soup.find_all("a", {"class": "product-grid-item"})
+		for product_container in product_containers:
+			link = "https://wallacks.com/" + product_container['href']
+			print(link)
+			price_wrap = product_container.find_all("span", {"class": "h1 medium--left"})
+			paras = product_container.find_all("p")
+			if len(price_wrap) and len(paras):
+				spans = price_wrap[0].find_all("span")
+				if len(spans) > 1:
+					product_links.append(link)
+					print(paras[0].contents[0])
+					products.append({
+						'title': paras[0].contents[0],
+						'description': "",
+						'price': spans[1].contents[0],
+						'url': link,
+						'brand': "",
+						'store': "Wallacks"
+					})
+	print(products)
+	#Save our results
+	f = open("wallacks.json","w+")
+	f.write(json.dumps(products))
+	f.close()
 	print("Done Wallacks!!")
-
+scrapeWallacks()
 #https://www.staples.ca/en/Arts-Crafts/cat_CG2623_2-CA_1_20001
 #https://www.staples.ca/en/Office-Supplies/cat_SC5218_2-CA_1_20001
-def scrapeStaples():
-	url = "https://www.staples.ca/en/Arts-Crafts/cat_CG2623_2-CA_1_20001"
-	print("Done Staples!!")
+#def scrapeStaples():
+#	url = "https://www.staples.ca/en/Arts-Crafts/cat_CG2623_2-CA_1_20001"
+#	print("Done Staples!!")
 
 #https://www.currys.com/catalogpc.htm?Category=shop_by_brand - too old and gross to scrape
 #def scrapeCurrys():
