@@ -143,7 +143,7 @@ public class ProductService {
 		try {
 			DBObject query = new Product(new StandardAnalyzer()).createQuery("indexed_text",queryString, Condition.ALL);
 			DBCursor cursor = productCollection.find(query);	
-			cursor.sort(new BasicDBObject("price ", -1));
+			cursor.sort(new BasicDBObject("price", 1));
 			while(cursor.hasNext()){
 				BasicDBObject result = (BasicDBObject) cursor.next();
 				String title = result.getString("title");
@@ -160,5 +160,26 @@ public class ProductService {
 		return products;
 	}
 
+	public ArrayList<Product> queryTop(String queryString, int n){
+		ArrayList<Product> products = new ArrayList<Product>();
+		try {
+			DBObject query = new Product(new StandardAnalyzer()).createQuery("indexed_text",queryString, Condition.ALL);
+			DBCursor cursor = productCollection.find(query);	
+			cursor.sort(new BasicDBObject("price", 1)).limit(n);
+			while(cursor.hasNext()){
+				BasicDBObject result = (BasicDBObject) cursor.next();
+				String title = result.getString("title");
+				String store = result.getString("store");
+				String url = result.getString("url");
+				String brand = result.getString("brand");
+				Double price = result.getDouble("price");
+				Product p = new Product(title,store,url,price);
+				products.add(p);
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return products;
+	}
 
 }

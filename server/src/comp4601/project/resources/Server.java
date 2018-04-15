@@ -9,8 +9,12 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -110,16 +114,19 @@ public class Server {
 		@Produces(MediaType.APPLICATION_JSON)
 		@Path("query/{terms}")
 		public Response queryProducts(@PathParam("terms") String terms){
+			NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
 			ProductService p = new ProductService();
 			ArrayList<Product> results = p.query(terms);
 			String list = "[";
 			int curr = 0;
+			//double price = 2.50000000000003;
+			//System.out.println(currencyFormatter.format(price));
 			for(Product product : results){
 				list += "{";
 				list += "title: '" + product.getTitle() + "', ";
 				list += "store: '" + product.getStore() + "', ";
 				list += "url: '" + product.getUrl() + "', ";
-				list += "price: " + product.getPrice() + "";
+				list += "price: '" + currencyFormatter.format(product.getPrice()) + "'";
 				list += "}";
 				if(curr != results.size()-1){
 					list += ",";
@@ -134,25 +141,40 @@ public class Server {
 		@Produces(MediaType.APPLICATION_JSON)
 		@Path("watching/{username}")
 		public Response getUserWatching(@PathParam("username") String username){
-			String list = "[";
-			//Get user watching, run query, return top 3 matches
-			/*ProductService p = new ProductService();
-			ArrayList<Product> results = p.query(terms);
+			NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+			UserService u = new UserService();
+			HashMap<String, ArrayList<Product>> results = u.getUserWatchedQueryProducts(username);
 			
-			int curr = 0;
-			for(Product product : results){
-				list += "{";
-				list += "title: '" + product.getTitle() + "', ";
-				list += "store: '" + product.getStore() + "', ";
-				list += "url: '" + product.getUrl() + "', ";
-				list += "price: " + product.getPrice() + "";
-				list += "}";
-				if(curr != results.size()-1){
+			String list = "[";
+			
+			Iterator it = results.entrySet().iterator();
+	        list += "[";
+	        int curr = 0;
+		    while (it.hasNext()) {
+		        Map.Entry<String,ArrayList<Product>> pair = (Map.Entry<String,ArrayList<Product>>) it.next();
+		        //System.out.println(pair.getKey() + " = " + pair.getValue());
+		        int currProd = 0;
+		        list += "{title:'"+pair.getKey()+"' , topProducts: [";
+		        ArrayList<Product> prods = pair.getValue();
+		        for(Product product: prods){
+			        list += "{";
+					list += "title: '" + product.getTitle() + "', ";
+					list += "store: '" + product.getStore() + "', ";
+					list += "url: '" + product.getUrl() + "', ";
+					list += "price: " + product.getPrice() + "";
+					list += "}";
+					if(currProd != prods.size()-1){
+						list += ",";
+					}
+					currProd++;
+		        }
+		        list += "]}";
+		        if(curr != results.size()-1){
 					list += ",";
 				}
-				curr++;
-			}*/
-			list += "]";
+		        curr++;
+		    }
+	        list += "]";
 			return Response.ok(list).build();//results;
 		}
 		

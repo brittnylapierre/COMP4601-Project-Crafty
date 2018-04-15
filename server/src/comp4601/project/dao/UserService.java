@@ -1,9 +1,8 @@
 package comp4601.project.dao;
 
-import java.io.IOException;
 import java.net.UnknownHostException;
-
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -13,7 +12,6 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 import comp4601.project.models.Product;
-import comp4601.project.models.Product.Condition;
 import comp4601.project.models.User;
 
 public class UserService {
@@ -122,5 +120,23 @@ public class UserService {
 		 DBObject listItem = new BasicDBObject("viewed", product);
 		 DBObject updateQuery = new BasicDBObject("$push", listItem);
 		 userCollection.update(new BasicDBObject("username", username), updateQuery);
+	}
+	
+	public HashMap<String, ArrayList<Product>> getUserWatchedQueryProducts(String username){
+		HashMap<String, ArrayList<Product>> results = new HashMap<String, ArrayList<Product>>();
+		BasicDBObject query = new BasicDBObject();
+		query.put("username", username);
+		BasicDBObject result = (BasicDBObject) userCollection.findOne(query);
+		if(result.containsField("watching")){
+			ProductService p = new ProductService();
+			BasicDBList list = (BasicDBList) result.get("watching");
+			ArrayList<Product> res = new ArrayList<Product>();
+			for(Object el: list) {
+				String terms = (String) el;
+				ArrayList<Product> topProds = p.queryTop(terms, 5);
+				results.put(terms, topProds);
+			}
+		}
+		return results;	
 	}
 }
