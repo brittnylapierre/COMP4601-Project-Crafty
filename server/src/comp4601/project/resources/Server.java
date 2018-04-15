@@ -11,6 +11,7 @@ import java.util.Random;
 import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -85,14 +86,16 @@ public class Server {
 		public String queryProducts(@PathParam("terms") String terms){
 			ProductService p = new ProductService();
 			ArrayList<Product> results = p.query(terms);
-			String list = "{";
+			String list = "[";
 			for(Product product : results){
-				list += "title: '" + product.getTitle() + "'";
-				list += "store: '" + product.getStore() + "'";
-				list += "url: '" + product.getUrl() + "'";
+				list += "{";
+				list += "title: '" + product.getTitle() + "', ";
+				list += "store: '" + product.getStore() + "', ";
+				list += "url: '" + product.getUrl() + "', ";
 				list += "price: " + product.getPrice() + "";
+				list += "}";
 			}
-			list += "}";
+			list += "]";
 			return list;//results;
 		}
 		
@@ -100,6 +103,7 @@ public class Server {
 		
 		@POST
 		@Path("add-product")
+		@Consumes("application/x-www-form-urlencoded;charset=UTF-8") 
 		@Produces(MediaType.APPLICATION_JSON)
 		public String addProduct(@FormParam("title") String title, 
 				@FormParam("store") String store,
@@ -110,7 +114,7 @@ public class Server {
 			Product newProd = new Product(title, store, url, price);
 			newProd.setBrand(brand);
 			p.addProductToDB(newProd);
-			return "{success:true}";
+			return "{success:1}";
 		}
 		
 }
