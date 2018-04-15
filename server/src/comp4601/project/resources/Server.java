@@ -128,8 +128,6 @@ public class Server {
 			return Response.ok(list).build();//results;
 		}
 		
-		//TODO:Post return json
-		
 		@POST
 		@Path("add-product")
 		@Consumes("application/x-www-form-urlencoded;charset=UTF-8") 
@@ -143,16 +141,18 @@ public class Server {
 			Product newProd = new Product(title, store, url, price);
 			newProd.setBrand(brand);
 			p.addProductToDB(newProd);
-			return Response.ok("{success:1}").build();
+			return Response.ok("{success: true}").build();
 		}
 		
 		
 		@Secured
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
-		@Path("watch/{terms}")
-		public Response watchQuery(@PathParam("terms") String terms){
-			return Response.ok("{success:1}").build();
+		@Path("watch/{username}/{terms}")
+		public Response watchQuery(@PathParam("username") String username, @PathParam("terms") String terms){
+			UserService u = new UserService();
+			u.watchQuery(username, terms);
+			return Response.ok("{success: true}").build();
 		}
 		
 		@POST

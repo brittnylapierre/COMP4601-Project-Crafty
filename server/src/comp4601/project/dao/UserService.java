@@ -103,4 +103,10 @@ public class UserService {
 		userCollection.update(searchQuery, newDocument2);
 		return u;
 	}
+	
+	public void watchQuery(String username, String watchQuery){
+		 DBObject listItem = new BasicDBObject("watching", watchQuery);
+		 DBObject updateQuery = new BasicDBObject("$push", listItem);
+		 userCollection.update(new BasicDBObject("username", username), updateQuery);
+	}
 }
