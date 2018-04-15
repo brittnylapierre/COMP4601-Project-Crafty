@@ -34,6 +34,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 
 import comp4601.project.dao.ProductService;
+import comp4601.project.dao.UserService;
 import comp4601.project.models.Product;
 import sun.misc.BASE64Encoder;
 
@@ -106,6 +107,7 @@ public class Server {
 			ProductService p = new ProductService();
 			ArrayList<Product> results = p.query(terms);
 			String list = "[";
+			int curr = 0;
 			for(Product product : results){
 				list += "{";
 				list += "title: '" + product.getTitle() + "', ";
@@ -113,6 +115,10 @@ public class Server {
 				list += "url: '" + product.getUrl() + "', ";
 				list += "price: " + product.getPrice() + "";
 				list += "}";
+				if(curr != results.size()-1){
+					list += ",";
+				}
+				curr++;
 			}
 			list += "]";
 			return list;//results;
@@ -142,8 +148,17 @@ public class Server {
 		@Produces(MediaType.APPLICATION_JSON)
 		@Path("watch/{terms}")
 		public String watchQuery(@PathParam("terms") String terms){
-			
 			return "{success:1}";
 		}
 		
+		@POST
+		@Path("create-account")
+		@Consumes("application/x-www-form-urlencoded;charset=UTF-8") 
+		@Produces(MediaType.APPLICATION_JSON)
+		public String createUser(@FormParam("username") String username, 
+				@FormParam("password") String password){
+			UserService u = new UserService();
+			boolean success = u.createUser(username, password);
+			return "{success:"+success+"}";
+		}
 }

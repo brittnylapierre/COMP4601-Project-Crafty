@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
+import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
@@ -33,31 +34,46 @@ public class UserService {
 		}
 	}
 	
-	public User createUser(String username, String password){
-		BasicDBObject query = new BasicDBObject();
-		query.put("username", username);
-		query.put("password", password);
-		BasicDBObject result = (BasicDBObject) userCollection.findOne(query);	
-		if(!result.isEmpty()){
-			String usernameRes = result.getString("username");
-			String token = result.getString("token");
-			Long accessTimeMS = result.getLong("accessTimeMS");
-			return new User(usernameRes, token, accessTimeMS);		
+	public boolean createUser(String username, String password){
+		//craftyDB products
+		try {
+			BasicDBObject newDocument = new BasicDBObject();
+			newDocument.put("username", username);
+			newDocument.put("password", password);
+			userCollection.insert(newDocument);
+			return true;
+		} catch(Exception e){
+			System.out.println(e.getMessage());
+			System.out.println("error creating user");
+			return false;
 		}
-		return null;
 	}
 	
 	public User findOne(String username, String password){
+		//System.out.println("in db fn");
 		BasicDBObject query = new BasicDBObject();
+		//System.out.println("in db fn 2");
 		query.put("username", username);
+		//System.out.println("in db fn 3");
 		query.put("password", password);
+		//System.out.println("in db fn 4");
 		BasicDBObject result = (BasicDBObject) userCollection.findOne(query);	
+		//System.out.println("in db fn 5");
 		if(!result.isEmpty()){
+			//System.out.println("user 1!");
 			String usernameRes = result.getString("username");
-			String token = result.getString("token");
-			Long accessTimeMS = result.getLong("accessTimeMS");
+			String token = "";
+			Long accessTimeMS = (long) 0;
+			if(result.containsField("token")){
+				token = result.getString("token");
+			}
+			if(result.containsField("accessTimeMS")){
+				accessTimeMS = result.getLong("accessTimeMS");
+			}
+			//System.out.println("user 2!");
 			return new User(usernameRes, token, accessTimeMS);		
 		}
+		//System.out.println("no user :-(");
 		return null;
 	}
 	
@@ -80,11 +96,11 @@ public class UserService {
 	
 	public User updateToken(String username, String token){
 		User u = new User(username, token);
-		BasicDBObject newDocument = new BasicDBObject();
-		newDocument.append("$set", new BasicDBObject().append("token", token));
-		newDocument.append("$set", new BasicDBObject().append("accessTimeMS", u.getAccessTimeMS()));
+		BasicDBObject newDocument = new BasicDBObject("$set", new BasicDBObject().append("token", token));
+		BasicDBObject newDocument2 = new BasicDBObject("$set", new BasicDBObject().append("accessTimeMS", u.getAccessTimeMS()));
 		BasicDBObject searchQuery = new BasicDBObject().append("username", username);
 		userCollection.update(searchQuery, newDocument);
+		userCollection.update(searchQuery, newDocument2);
 		return u;
 	}
 }

@@ -26,13 +26,14 @@ public class AuthenticationEndPoint {
         try {
 
             // Authenticate the user using the credentials provided
-            authenticate(username, password);
+        	System.out.println("Begin auth!");
+            this.authenticate(username, password);
 
             // Issue a token for the user
-            String token = issueToken(username);
+            String token = this.issueToken(username);
 
             // Return the token on the response
-            return Response.ok(token).build();
+            return Response.ok("{token: '" + token + "'}").build();
 
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();
@@ -42,9 +43,13 @@ public class AuthenticationEndPoint {
     private void authenticate(String username, String password) throws Exception {
         // Authenticate against a database, LDAP, file or whatever
         // Throw an Exception if the credentials are invalid
+    	System.out.println("Checking db...");
     	UserService u = new UserService();
     	User result = u.findOne(username, password);
+    	//System.out.println("Authentincating..");
+    	//System.out.println(result);
     	if(result == null){
+    		System.out.println("error");
     		throw new AuthenticationException();
     	}
     }
@@ -53,6 +58,7 @@ public class AuthenticationEndPoint {
     	String token = RandomStringUtils.randomAlphanumeric(10);
     	UserService u = new UserService();
     	u.updateToken(username,token);
+    	System.out.println("update token");
 		return token;
     }
 }
