@@ -109,4 +109,18 @@ public class UserService {
 		 DBObject updateQuery = new BasicDBObject("$push", listItem);
 		 userCollection.update(new BasicDBObject("username", username), updateQuery);
 	}
+	
+	
+	public void removeWatchQuery(String username, String watchQuery){
+		 DBObject listItem = new BasicDBObject("watching", watchQuery);
+		 DBObject updateQuery = new BasicDBObject("$pull", listItem);
+		 userCollection.update(new BasicDBObject("username", username), updateQuery);
+	}
+	
+
+	public void addViewedProduct(String username, String product){
+		 DBObject listItem = new BasicDBObject("viewed", product);
+		 DBObject updateQuery = new BasicDBObject("$push", listItem);
+		 userCollection.update(new BasicDBObject("username", username), updateQuery);
+	}
 }

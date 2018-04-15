@@ -16,10 +16,12 @@ import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.NameBinding;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -146,12 +148,32 @@ public class Server {
 		
 		
 		@Secured
-		@GET
+		@PUT
 		@Produces(MediaType.APPLICATION_JSON)
 		@Path("watch/{username}/{terms}")
 		public Response watchQuery(@PathParam("username") String username, @PathParam("terms") String terms){
 			UserService u = new UserService();
 			u.watchQuery(username, terms);
+			return Response.ok("{success: true}").build();
+		}
+		
+		@Secured
+		@DELETE
+		@Produces(MediaType.APPLICATION_JSON)
+		@Path("unwatch/{username}/{terms}")
+		public Response removeWatchQuery(@PathParam("username") String username, @PathParam("terms") String terms){
+			UserService u = new UserService();
+			u.removeWatchQuery(username, terms);
+			return Response.ok("{success: true}").build();
+		}
+		
+		@Secured
+		@PUT
+		@Produces(MediaType.APPLICATION_JSON)
+		@Path("viewed/{username}/{product}")
+		public Response addViewed(@PathParam("username") String username, @PathParam("product") String product){
+			UserService u = new UserService();
+			u.addViewedProduct(username, product);
 			return Response.ok("{success: true}").build();
 		}
 		
