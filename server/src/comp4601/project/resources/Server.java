@@ -148,10 +148,11 @@ public class Server {
 		
 		
 		@Secured
-		@PUT
+		@POST
 		@Produces(MediaType.APPLICATION_JSON)
-		@Path("watch/{username}/{terms}")
-		public Response watchQuery(@PathParam("username") String username, @PathParam("terms") String terms){
+		@Path("watch")
+		@Consumes("application/x-www-form-urlencoded;charset=UTF-8") 
+		public Response watchQuery(@FormParam("username") String username,@FormParam("terms") String terms){
 			UserService u = new UserService();
 			u.watchQuery(username, terms);
 			return Response.ok("{success: true}").build();
@@ -160,18 +161,20 @@ public class Server {
 		@Secured
 		@DELETE
 		@Produces(MediaType.APPLICATION_JSON)
-		@Path("unwatch/{username}/{terms}")
-		public Response removeWatchQuery(@PathParam("username") String username, @PathParam("terms") String terms){
+		@Consumes("application/x-www-form-urlencoded;charset=UTF-8") 
+		@Path("unwatch")
+		public Response removeWatchQuery(@FormParam("username") String username, @FormParam("terms") String terms){
 			UserService u = new UserService();
 			u.removeWatchQuery(username, terms);
 			return Response.ok("{success: true}").build();
 		}
 		
 		@Secured
-		@PUT
+		@POST
 		@Produces(MediaType.APPLICATION_JSON)
-		@Path("viewed/{username}/{product}")
-		public Response addViewed(@PathParam("username") String username, @PathParam("product") String product){
+		@Path("viewed")
+		@Consumes("application/x-www-form-urlencoded;charset=UTF-8") 
+		public Response addViewed(@FormParam("username") String username, @FormParam("product") String product){
 			UserService u = new UserService();
 			u.addViewedProduct(username, product);
 			return Response.ok("{success: true}").build();
