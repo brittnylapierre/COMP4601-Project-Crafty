@@ -3,8 +3,10 @@ package comp4601.project.resources;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -42,6 +44,8 @@ import org.jsoup.nodes.Element;
 import comp4601.project.dao.ProductService;
 import comp4601.project.dao.UserService;
 import comp4601.project.models.Product;
+import de.neuland.jade4j.Jade4J;
+import de.neuland.jade4j.template.JadeTemplate;
 import sun.misc.BASE64Encoder;
 
 
@@ -73,22 +77,46 @@ public class Server {
 		
 
 		private String name;
-		//private String ROOT = "C:/Users/IBM_ADMIN/workspace/COMP4601A2/";
+		private String ROOT = "C:/Users/IBM_ADMIN/dev/COMP4601-Project/server";
+
+		String path = ROOT + "/public/";
 		//String ROOT= "/Users/kellymaclauchlan/code/mobile/a2/COMP4601A2/";
 		
 		public Server() {
 			name = "Crafty";
 		}
-
-		
-		/*@GET
-		@Produces(MediaType.APPLICATION_JSON)
-		public Product sayJSON() {
-			Product p = new Product("Copic marker barium yellow", 6.78);
-			return p;
-		}*/
 		
 		@GET
+		@Produces({MediaType.TEXT_HTML})
+		public String viewHome(){
+			JadeTemplate template;
+			try {
+				template = Jade4J.getTemplate(path + "index.jade");
+				Map<String, Object> model = new HashMap<String, Object>();
+				model.put("appName", "Crafty");
+				return Jade4J.render(template, model);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+		/*@GET
+		@Path("profile")
+		@Produces({MediaType.TEXT_HTML})
+		public InputStream viewProfile(){
+			File f = new File(path + "index.html");
+			try {
+				return new FileInputStream(f);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}*/
+		
+		/*@GET
 		@Produces(MediaType.TEXT_PLAIN)
 		public String sayPlainTextHello(){
 			return "Welcome to Crafty";
@@ -98,7 +126,7 @@ public class Server {
 		@Produces(MediaType.TEXT_HTML)
 		public String sayHTML() {
 			return "<html><head></head><body>"+this.name+"</body></html>";
-		}
+		}*/
 		
 		
 		@GET
