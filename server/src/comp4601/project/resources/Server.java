@@ -42,6 +42,10 @@ import sun.misc.BASE64Encoder;
 /*
  * SECURITY TUTORIAL
  * https://stackoverflow.com/questions/26777083/best-practice-for-rest-token-based-authentication-with-jax-rs-and-jersey
+ * 
+ * Extracting the token from the request and validating it
+ * The client should send the token in the standard HTTP Authorization header of the request. For example:
+ * Authorization: Bearer <token-goes-here>
  * */
 @Path("/api")
 public class Server {
@@ -144,7 +148,7 @@ public class Server {
 		
 		
 		@Secured
-		@POST
+		@GET
 		@Produces(MediaType.APPLICATION_JSON)
 		@Path("watch/{terms}")
 		public String watchQuery(@PathParam("terms") String terms){
