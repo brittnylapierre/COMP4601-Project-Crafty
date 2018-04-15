@@ -26,6 +26,9 @@ public class Product extends BasicDBObject {
 	public static enum Condition {ALL,IN}
 	private Analyzer analyzer;
 	
+	public Product() {
+	}
+	
 	public Product(StandardAnalyzer analyzer) {
 		this.analyzer = analyzer;//new StandardAnalyzer();
 	}

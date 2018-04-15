@@ -13,12 +13,14 @@ import java.util.stream.Collectors;
 import javax.imageio.ImageIO;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.codehaus.jettison.json.JSONException;
@@ -78,20 +80,37 @@ public class Server {
 		}
 		
 		@GET
-		@Produces(MediaType.TEXT_HTML)
+		@Produces(MediaType.APPLICATION_JSON)
 		@Path("query/{terms}")
 		public String queryProducts(@PathParam("terms") String terms){
 			ProductService p = new ProductService();
 			ArrayList<Product> results = p.query(terms);
-			String list = "";
+			String list = "{";
 			for(Product product : results){
-				list += "<h3><a href='"+product.getUrl()+"' target='_blank'>"+product.getTitle()+"</a></h3>";
-				list += "<p>Store: " + product.getStore() + "</p>";
-				list += "<p><b>$" + product.getPrice() + "</b></p>";
+				list += "title: '" + product.getTitle() + "'";
+				list += "store: '" + product.getStore() + "'";
+				list += "url: '" + product.getUrl() + "'";
+				list += "price: " + product.getPrice() + "";
 			}
-			return "<html><head></head><body><h1>Welcome to Crafty</h1>" + list +"</body></html>";
+			list += "}";
+			return list;//results;
 		}
 		
 		//TODO:Post return json
+		
+		@POST
+		@Path("add-product")
+		@Produces(MediaType.APPLICATION_JSON)
+		public String addProduct(@FormParam("title") String title, 
+				@FormParam("store") String store,
+				@FormParam("url") String url,
+				@FormParam("brand") String brand,
+				@FormParam("price") double price){
+			ProductService p = new ProductService();
+			Product newProd = new Product(title, store, url, price);
+			newProd.setBrand(brand);
+			p.addProductToDB(newProd);
+			return "{success:true}";
+		}
 		
 }
