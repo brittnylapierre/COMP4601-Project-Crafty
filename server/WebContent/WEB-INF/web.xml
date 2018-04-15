@@ -8,15 +8,16 @@
   </context-param>
   <servlet>
     <servlet-name>crafty</servlet-name>
-    <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+    <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+    <!--servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class-->
     <init-param>
-      <param-name>com.sun.jersey.config.property.packages</param-name>
+      <param-name>jersey.config.server.provider.packages</param-name>
       <param-value>comp4601.project.resources</param-value>
     </init-param>
-    <init-param>
-    	<param-name>com.sun.jersey.api.json.POJOMappingFeature</param-name>
+    <!--init-param>
+    	<param-name>org.glassfish.jersey.api.json.POJOMappingFeature</param-name>
     	<param-value>true</param-value>
-	</init-param>
+	</init-param  -->
     <load-on-startup>1</load-on-startup>
   </servlet>
   <servlet-mapping>
