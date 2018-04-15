@@ -107,7 +107,7 @@ public class Server {
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
 		@Path("query/{terms}")
-		public String queryProducts(@PathParam("terms") String terms){
+		public Response queryProducts(@PathParam("terms") String terms){
 			ProductService p = new ProductService();
 			ArrayList<Product> results = p.query(terms);
 			String list = "[";
@@ -125,7 +125,7 @@ public class Server {
 				curr++;
 			}
 			list += "]";
-			return list;//results;
+			return Response.ok(list).build();//results;
 		}
 		
 		//TODO:Post return json
@@ -134,7 +134,7 @@ public class Server {
 		@Path("add-product")
 		@Consumes("application/x-www-form-urlencoded;charset=UTF-8") 
 		@Produces(MediaType.APPLICATION_JSON)
-		public String addProduct(@FormParam("title") String title, 
+		public Response addProduct(@FormParam("title") String title, 
 				@FormParam("store") String store,
 				@FormParam("url") String url,
 				@FormParam("brand") String brand,
@@ -143,7 +143,7 @@ public class Server {
 			Product newProd = new Product(title, store, url, price);
 			newProd.setBrand(brand);
 			p.addProductToDB(newProd);
-			return "{success:1}";
+			return Response.ok("{success:1}").build();
 		}
 		
 		
@@ -151,18 +151,18 @@ public class Server {
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
 		@Path("watch/{terms}")
-		public String watchQuery(@PathParam("terms") String terms){
-			return "{success:1}";
+		public Response watchQuery(@PathParam("terms") String terms){
+			return Response.ok("{success:1}").build();
 		}
 		
 		@POST
 		@Path("create-account")
 		@Consumes("application/x-www-form-urlencoded;charset=UTF-8") 
 		@Produces(MediaType.APPLICATION_JSON)
-		public String createUser(@FormParam("username") String username, 
+		public Response createUser(@FormParam("username") String username, 
 				@FormParam("password") String password){
 			UserService u = new UserService();
 			boolean success = u.createUser(username, password);
-			return "{success:"+success+"}";
+			return Response.ok("{success:"+success+"}").build();
 		}
 }
