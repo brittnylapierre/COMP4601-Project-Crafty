@@ -57,7 +57,7 @@ import sun.misc.BASE64Encoder;
  * The client should send the token in the standard HTTP Authorization header of the request. For example:
  * Authorization: Bearer <token-goes-here>
  * */
-@Path("/api")
+@Path("/crafty")
 public class Server {
 	private static final RetentionPolicy RUNTIME = null;
 	private static final ElementType TYPE = null;

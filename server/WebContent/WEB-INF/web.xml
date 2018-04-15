@@ -22,6 +22,10 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>crafty</servlet-name>
-    <url-pattern>/crafty/*</url-pattern>
+    <url-pattern>/public/(style|scripts)/.*</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>crafty</servlet-name>
+    <url-pattern>/*</url-pattern>
   </servlet-mapping>
 </web-app>
