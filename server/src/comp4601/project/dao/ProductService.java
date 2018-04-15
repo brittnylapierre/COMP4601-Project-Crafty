@@ -143,6 +143,7 @@ public class ProductService {
 		try {
 			DBObject query = new Product(new StandardAnalyzer()).createQuery("indexed_text",queryString, Condition.ALL);
 			DBCursor cursor = productCollection.find(query);	
+			cursor.sort(new BasicDBObject("price ", -1));
 			while(cursor.hasNext()){
 				BasicDBObject result = (BasicDBObject) cursor.next();
 				String title = result.getString("title");

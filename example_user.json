@@ -1,0 +1,14 @@
+{
+    "_id" : ObjectId("5ad39411ee1d9c36cc0fc651"),
+    "username" : "markerlover",
+    "password" : "tyo123",
+    "accessTimeMS" : NumberLong(1523824245690),
+    "token" : "BNCMnbmTI4",
+    "watching" : [ 
+        "copic"
+    ],
+    "viewed" : [ 
+        "Staedtler Duo-Color Markers - 36 Brilliant Colors", 
+        "Copic Ciao Markers — Set D, 36 Colours"
+    ]
+}

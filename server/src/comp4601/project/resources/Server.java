@@ -130,6 +130,32 @@ public class Server {
 			return Response.ok(list).build();//results;
 		}
 		
+		@GET
+		@Produces(MediaType.APPLICATION_JSON)
+		@Path("watching/{username}")
+		public Response getUserWatching(@PathParam("username") String username){
+			String list = "[";
+			//Get user watching, run query, return top 3 matches
+			/*ProductService p = new ProductService();
+			ArrayList<Product> results = p.query(terms);
+			
+			int curr = 0;
+			for(Product product : results){
+				list += "{";
+				list += "title: '" + product.getTitle() + "', ";
+				list += "store: '" + product.getStore() + "', ";
+				list += "url: '" + product.getUrl() + "', ";
+				list += "price: " + product.getPrice() + "";
+				list += "}";
+				if(curr != results.size()-1){
+					list += ",";
+				}
+				curr++;
+			}*/
+			list += "]";
+			return Response.ok(list).build();//results;
+		}
+		
 		@POST
 		@Path("add-product")
 		@Consumes("application/x-www-form-urlencoded;charset=UTF-8") 
