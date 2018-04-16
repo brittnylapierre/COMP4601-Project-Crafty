@@ -1,6 +1,6 @@
-form.search-form.form-inline.my-2.my-lg-0
-	input.form-control.mr-sm-2(type="search", placeholder="Search")
-	button.btn.btn-outline-warning.my-2.my-sm-0.color-secondary-1-0(type="submit")
+div.search-form.form-inline.my-2.my-lg-0
+	input.form-control.mr-sm-2(type="search", placeholder="Search", id="search-input")
+	button.btn.btn-outline-warning.my-2.my-sm-0.color-secondary-1-0(id="search-button")
 		|Search
 div.results.container
 	div.row
@@ -34,3 +34,9 @@ div.results.container
 					|price
 				a.btn.background-primary-2.btn-buy(href="")
 					|Buy
+	script(type='text/javascript').
+		$("#search-button").click(function(){
+			$.get("http://localhost:8080/COMP4601_FINAL_SERVER/crafty/query/" + $('#search-input').val(), function(data, status){
+				console.log("Data: " + data + "\nStatus: " + status);
+			});
+		});
