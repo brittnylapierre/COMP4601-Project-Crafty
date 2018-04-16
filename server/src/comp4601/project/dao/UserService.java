@@ -90,6 +90,7 @@ public class UserService {
 			return false;
 		}
 	}
+	
 	public User findOne(String username, String password){
 		//System.out.println("in db fn");
 		BasicDBObject query = new BasicDBObject();
@@ -174,6 +175,19 @@ public class UserService {
 			return u;		
 		}
 		//System.out.println("no user :-(");
+		return null;
+	}
+	
+	public User findUserWithToken(String token){
+		BasicDBObject query = new BasicDBObject();
+		query.put("token", token);
+		BasicDBObject result = (BasicDBObject) userCollection.findOne(query);	
+
+		if(result != null && !result.isEmpty()){
+			String usernameRes = result.getString("username");
+			Long accessTimeMS = result.getLong("accessTimeMS");
+			return new User(usernameRes, token, accessTimeMS);		
+		}
 		return null;
 	}
 	

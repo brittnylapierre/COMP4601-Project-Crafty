@@ -1,0 +1,24 @@
+doctype html
+html(lang="en")
+	include ./includes/head.jade
+	body
+		include ./includes/nav.jade
+		div.container
+			div(id="login-form")
+				div.form-group
+					label(for="usernameinput")
+						|Username
+					input.form-control(type="username", id="usernameinput")
+					label(for="passwordinput")
+						|Password
+					input.form-control(type="password", id="passwordinput")
+					button.btn.background-primary-3(id="login-button")
+						|Login
+script(type='text/javascript').
+	$("#login-button").click(function(){
+		$.post( "http://localhost:8080/COMP4601_FINAL_SERVER/authentication", { username: $('#usernameinput').val(), password: $('#passwordinput').val() }, function( data ) {
+			console.log(data.token);
+			Cookies.set('token', data.token);
+		});
+	});
+	

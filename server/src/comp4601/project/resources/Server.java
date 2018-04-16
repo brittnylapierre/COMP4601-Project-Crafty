@@ -1,5 +1,6 @@
 package comp4601.project.resources;
 
+import java.awt.List;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.CookieParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
@@ -32,6 +34,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.Cookie;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
@@ -79,9 +83,9 @@ public class Server {
 
 		private String name;
 		//TODO:change root
-		//private String ROOT = "C:/Users/IBM_ADMIN/dev/COMP4601-Project/server";
+		private String ROOT = "C:/Users/IBM_ADMIN/dev/COMP4601-Project/server";
 
-		String ROOT=  "/Users/kellymaclauchlan/code/mobile/project/COMP4601-Project/server";
+		//String ROOT=  "/Users/kellymaclauchlan/code/mobile/project/COMP4601-Project/server";
 		String path = ROOT + "/public/";
 		public Server() {
 			name = "Crafty";
@@ -93,6 +97,45 @@ public class Server {
 			JadeTemplate template;
 			try {
 				template = Jade4J.getTemplate(path + "index.jade");
+				Map<String, Object> model = new HashMap<String, Object>();
+				model.put("appName", "Crafty");
+				return Jade4J.render(template, model);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+		@GET
+		@Path("dashboard")
+		@Produces({MediaType.TEXT_HTML})
+		public String viewDashboard(@CookieParam("token") Cookie cookie){
+			JadeTemplate template;
+			try {
+				template = Jade4J.getTemplate(path + "dashboard.jade");
+				Map<String, Object> model = new HashMap<String, Object>();
+				model.put("appName", "Crafty");
+				return Jade4J.render(template, model);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+		@GET
+		@Path("login")
+		@Produces({MediaType.TEXT_HTML})
+		public String viewLogin(){
+			JadeTemplate template;
+			try {
+				template = Jade4J.getTemplate(path + "login.jade");
+				/*
+				NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+				UserService u = new UserService();
+				HashMap<String, ArrayList<Product>> results = u.getUserWatchedQueryProducts(username);*/
+				
 				Map<String, Object> model = new HashMap<String, Object>();
 				model.put("appName", "Crafty");
 				return Jade4J.render(template, model);
@@ -168,22 +211,23 @@ public class Server {
 		
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
-		@Path("watching/{username}")
-		public Response getUserWatching(@PathParam("username") String username){
+		@Path("watching")
+		public Response getUserWatching(@CookieParam("token") Cookie cookie){
+			String token = cookie.getValue();
 			NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
 			UserService u = new UserService();
-			HashMap<String, ArrayList<Product>> results = u.getUserWatchedQueryProducts(username);
+			User user = u.findUserWithToken(token);
+			HashMap<String, ArrayList<Product>> results = u.getUserWatchedQueryProducts(user.getUsername());
 			
 			String list = "[";
 			
 			Iterator it = results.entrySet().iterator();
-	        list += "[";
 	        int curr = 0;
 		    while (it.hasNext()) {
 		        Map.Entry<String,ArrayList<Product>> pair = (Map.Entry<String,ArrayList<Product>>) it.next();
 		        //System.out.println(pair.getKey() + " = " + pair.getValue());
 		        int currProd = 0;
-		        list += "{title:'"+pair.getKey()+"' , topProducts: [";
+		        list += "{\"title\":\""+pair.getKey()+"\" , \"topProducts\": [";
 		        ArrayList<Product> prods = pair.getValue();
 		        for(Product product: prods){
 			        list += "{";

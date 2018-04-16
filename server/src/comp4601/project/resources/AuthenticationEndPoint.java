@@ -33,7 +33,7 @@ public class AuthenticationEndPoint {
             String token = this.issueToken(username);
 
             // Return the token on the response
-            return Response.ok("{token: '" + token + "'}").build();
+            return Response.ok("{\"token\": \"" + token + "\"}").build();
 
         } catch (Exception e) {
             return Response.status(Response.Status.FORBIDDEN).build();
