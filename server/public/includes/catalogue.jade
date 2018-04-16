@@ -8,14 +8,37 @@ div.search-form.form-inline.my-2.my-lg-0
 div.results.container(id="results")
 	h5(id="startermsg")
 		i Search our catalogue for the cheapest prices on your favourite products!
+	h6(id="watchmsg")
+		span.watch-icon-left(id='watch-item', data-toggle='tooltip', data-placement='top' title='watch')
+			i.far.fa-heart(id='w-unwatch')
+			i.fas.fa-heart(id='w-watch')
+			i.fas.fa-heart(id='watching')
+		span
+			|Watch for items matching
 	div.row(id="row-1")
 script(type='text/javascript').
 	$( document ).ready(function() {
 		$("#loader").hide();
+		$("#watchmsg").hide();
+		$("#watching").hide();
 	});
 	var products = [];
 	$("#search-button").click(function(){
 		$("#startermsg").hide();
+		$("#watchmsg").show();
+		$("#watchmsg").append(" '" + $('#search-input').val() + "'");
+		$("#watchmsg").click(function(){
+			$.ajax({
+				url: "http://localhost:8080/COMP4601_FINAL_SERVER/crafty/watch",
+				type: 'POST',
+				data: {terms:  $('#search-input').val()}
+			}).done(function(data){
+				console.log(data);
+				$("#watching").show();
+				$("#w-unwatch").hide();
+				$("#w-watch").hide();
+			});
+		});
 		$("#loader").show();
 		console.log("search");
 		$.getJSON("http://localhost:8080/COMP4601_FINAL_SERVER/crafty/query/" + $('#search-input').val(), function(data){

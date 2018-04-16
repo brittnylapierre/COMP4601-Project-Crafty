@@ -37,8 +37,8 @@ import comp4601.project.models.Product;
 import comp4601.project.models.Product.Condition;
 
 public class ProductService {
-	//String path = "C:/Users/IBM_ADMIN/dev/COMP4601-Project/data";
-	String path = "/Users/kellymaclauchlan/code/mobile/project/COMP4601-Project/data";
+	String path = "C:/Users/IBM_ADMIN/dev/COMP4601-Project/data";
+	//String path = "/Users/kellymaclauchlan/code/mobile/project/COMP4601-Project/data";
 	MongoClient mongoClient;
 	DB database;
 	DBCollection productCollection;

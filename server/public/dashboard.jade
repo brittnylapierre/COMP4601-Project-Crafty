@@ -8,11 +8,14 @@ html(lang="en")
 script(type='text/javascript').
 	function unwatch(termString){
 		$.ajax({
-			url: "http://localhost:8080/COMP4601_FINAL_SERVER/crafty/watching",
+			url: "http://localhost:8080/COMP4601_FINAL_SERVER/crafty/unwatch",
 			type: 'DELETE',
 			data: {terms: termString}
 		}).done(function(data){
 			console.log(data);
+			location.reload();
+		}).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+			console.log( "error " + textStatus);
 		});
 	}
 	console.log(Cookies.get('token'));
@@ -22,7 +25,7 @@ script(type='text/javascript').
 			$.each(data, function(key, value) {
 				console.log(key);
 				console.log(value);
-				dataString = "<li class='list-group-item'><i>Watched Item</i><br><h4>"+value.title+"</h4><span class='watch-icon' id='unwatch-item' data-toggle='tooltip' data-placement='top' title='Unwatch' onclick='unwatch('"+value.title+"')'><i class='fas fa-heart' id='watch'></i><i class='far fa-heart' id='unwatch'></i></span></li><div class='row'>";
+				dataString = "<li class='list-group-item'><i>Watched Item</i><br><h4>"+value.title+"</h4><span class='watch-icon' id='unwatch-item' data-toggle='tooltip' data-placement='top' title='Unwatch' onclick=\"unwatch('"+value.title+"')\"><i class='fas fa-heart' id='watch'></i><i class='far fa-heart' id='unwatch'></i></span></li><div class='row'>";
 				$.each(value.topProducts, function(index, product) {
 					console.log(index);
 					console.log(product);

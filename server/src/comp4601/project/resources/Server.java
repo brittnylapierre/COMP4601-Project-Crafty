@@ -83,9 +83,9 @@ public class Server {
 
 		private String name;
 		//TODO:change root
-		//private String ROOT = "C:/Users/IBM_ADMIN/dev/COMP4601-Project/server";
+		private String ROOT = "C:/Users/IBM_ADMIN/dev/COMP4601-Project/server";
 
-		String ROOT=  "/Users/kellymaclauchlan/code/mobile/project/COMP4601-Project/server";
+		//String ROOT=  "/Users/kellymaclauchlan/code/mobile/project/COMP4601-Project/server";
 		String path = ROOT + "/public/";
 		public Server() {
 			name = "Crafty";
@@ -273,12 +273,11 @@ public class Server {
 		}
 		
 		
-		//@Secured
 		@POST
 		@Produces(MediaType.APPLICATION_JSON)
 		@Path("watch")
 		@Consumes("application/x-www-form-urlencoded;charset=UTF-8") 
-		public Response watchQuery(@CookieParam("token") Cookie cookie,@FormParam("terms") String terms){
+		public Response watchQuery(@CookieParam("token") Cookie cookie, @FormParam("terms") String terms){
 			String token = cookie.getValue();
 			UserService u = new UserService();
 			User user = u.findUserWithToken(token);
@@ -287,7 +286,6 @@ public class Server {
 			return Response.ok("{\"success\": true}").build();
 		}
 		
-		//@Secured
 		@DELETE
 		@Produces(MediaType.APPLICATION_JSON)
 		@Consumes("application/x-www-form-urlencoded;charset=UTF-8") 
@@ -301,7 +299,6 @@ public class Server {
 			return Response.ok("{\"success\": true}").build();
 		}
 		
-		//@Secured
 		@POST
 		@Produces(MediaType.APPLICATION_JSON)
 		@Path("viewed")
