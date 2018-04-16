@@ -37,8 +37,8 @@ import comp4601.project.models.Product;
 import comp4601.project.models.Product.Condition;
 
 public class ProductService {
-	String path = "C:/Users/IBM_ADMIN/dev/COMP4601-Project/data";
-	//String path = "/Users/kellymaclauchlan/code/mobile/project/COMP4601-Project/data";
+	//String path = "C:/Users/IBM_ADMIN/dev/COMP4601-Project/data";
+	String path = "/Users/kellymaclauchlan/code/mobile/project/COMP4601-Project/data";
 	MongoClient mongoClient;
 	DB database;
 	DBCollection productCollection;
@@ -161,6 +161,50 @@ public class ProductService {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return products;
+	}
+	public ArrayList<Product> recomendedSearch(String storeFave,String price, String querry){
+		int max=10;//max number of products to retreive
+		int found=0;
+		int ms=0;
+		int mas=1000;
+		if(price=="one"){
+			ms=0;
+			mas=20;
+		}if(price=="two"){
+			ms=20;
+			mas=50;
+		}
+		if(price=="three"){
+			ms=50;
+			mas=100;
+		}
+		if(price=="four"){
+			ms=100;
+			mas=300;
+		}
+		if(price=="five"){
+			ms=300;
+			mas=300000;
+		}
+		ArrayList<Product> products= new ArrayList<Product>();
+		ArrayList<Product> rands =this.query(querry);
+		
+		for(Product p :rands){
+			if(p.getPrice()>=ms&&p.getPrice()<=mas){
+				//System.out.println("found a match");
+				if(p.getStore().contentEquals(storeFave)){
+					System.out.println("found a match");
+					products.add(p);
+					found++;
+				}
+			}
+		}
+		for(Product p :products){
+			rands.remove(p);
+		}
+		products.addAll(rands);
+		
 		return products;
 	}
 	public ArrayList<Product> recomended(String storeFave,String price){

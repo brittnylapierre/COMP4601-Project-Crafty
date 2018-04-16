@@ -83,9 +83,9 @@ public class Server {
 
 		private String name;
 		//TODO:change root
-		private String ROOT = "C:/Users/IBM_ADMIN/dev/COMP4601-Project/server";
+		//private String ROOT = "C:/Users/IBM_ADMIN/dev/COMP4601-Project/server";
 
-		//String ROOT=  "/Users/kellymaclauchlan/code/mobile/project/COMP4601-Project/server";
+		String ROOT=  "/Users/kellymaclauchlan/code/mobile/project/COMP4601-Project/server";
 		String path = ROOT + "/public/";
 		public Server() {
 			name = "Crafty";
@@ -189,6 +189,37 @@ public class Server {
 			NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
 			ProductService p = new ProductService();
 			ArrayList<Product> results = p.query(terms);
+			String list = "[";
+			int curr = 0;
+			//double price = 2.50000000000003;
+			//System.out.println(currencyFormatter.format(price));
+			for(Product product : results){
+				list += "{";
+				list += "\"title\": \"" + product.getTitle() + "\", ";
+				list += "\"store\": \"" + product.getStore() + "\", ";
+				list += "\"url\": \"" + product.getUrl() + "\", ";
+				list += "\"price\": \"" + currencyFormatter.format(product.getPrice()) + "\"";
+				list += "}";
+				if(curr != results.size()-1){
+					list += ",";
+				}
+				curr++;
+			}
+			list += "]";
+			return Response.ok(list).build();//results;
+		}
+		@GET
+		@Produces(MediaType.APPLICATION_JSON)
+		@Path("queryRecommend/{terms}/{user}/")
+		public Response queryProducts(@PathParam("terms") String terms,@PathParam("user") String user){
+			NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+			ProductService p = new ProductService();
+			UserService u = new UserService();
+			System.out.println(user);
+			User use=u.findOne(user);
+			String store= use.getMostShoppedAt();
+			String price=use.getMostSpent();
+			ArrayList<Product> results =p.recomendedSearch(store, price, terms);
 			String list = "[";
 			int curr = 0;
 			//double price = 2.50000000000003;
