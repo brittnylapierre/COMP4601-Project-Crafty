@@ -31,17 +31,19 @@ script(type='text/javascript').
 		$("#loader").hide();
 		$("#watchmsg").hide();
 		$("#watching").hide();
-		$.getJSON("http://localhost:8080/COMP4601_FINAL_SERVER/crafty/watchList", function(data){
-			console.log(data, data.watching);
-			watchList = data.watching;
-		}).fail(function(XMLHttpRequest, textStatus, errorThrown) {
-			console.log( "error " + textStatus);
-		});;
+		if(Cookies.get('token') != "undefined"){
+			$.getJSON("http://localhost:8080/COMP4601_FINAL_SERVER/crafty/watchList", function(data){
+				console.log(data, data.watching);
+				watchList = data.watching;
+			}).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+				console.log( "error " + textStatus);
+			});
+		}
 	});
 	var products = [];
 	$("#search-button").click(function(){
 		$("#startermsg").hide();
-		if(!watchList.includes($('#search-input').val())){
+		if(!watchList.includes($('#search-input').val()) && Cookies.get('token') != "undefined"){
 			console.log("wl ", watchList);
 			$("#watchmsg").show();
 		} else {
@@ -62,35 +64,70 @@ script(type='text/javascript').
 		});
 		$("#loader").show();
 		console.log("search");
-		$.getJSON("http://localhost:8080/COMP4601_FINAL_SERVER/crafty/queryRecommend/" + $('#search-input').val(), function(data){
-			var row = 0;
-			$.each(data, function(index, product) {
-				if(index % 3 == 0){
-					$("#results").append("<div class='row' id='row-"+row+"'></div>");	
-					row++;
-				}
+		if(Cookies.get('token') != "undefined"){
+			$.getJSON("http://localhost:8080/COMP4601_FINAL_SERVER/crafty/queryRecommend/" + $('#search-input').val(), function(data){
+				var row = 0;
+				$.each(data, function(index, product) {
+					if(index % 3 == 0){
+						$("#results").append("<div class='row' id='row-"+row+"'></div>");	
+						row++;
+					}
+				});
+				$("#loader").hide();
+				row = 0;
+				$.each(data, function(index, product) {
+					if(index % 3 == 0){
+						row++;
+					}
+					console.log("row-"+row);
+					$("#row-"+row).append("<div class='col-sm'>" +
+						"<div class='card'>" +
+							"<h5 class='card-title product-title'>" + product.title + 
+							//( product.suggested? "<span class='badge badge-info suggested'>Suggested</span>" : "") + 
+							"</h5>" +
+							"<h6 class='card-title'>"+
+								"<i>" + product.store + "</i>" +
+							"</h6>" +
+							"<p class='card-text color-secondary-2-0'>" + product.price + "</p>" +
+							"<a class='btn background-primary-2 btn-buy' target='_blank' href='"+product.url+"' onclick=\"setViewed('" + product.title + "')\">Buy</a>" +
+						"</div>" +
+					"</div>");
+				})
+			}).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+				console.log( "error " + textStatus);
 			});
-			$("#loader").hide();
-			row = 0;
-			$.each(data, function(index, product) {
-				if(index % 3 == 0){
-					row++;
-				}
-				console.log("row-"+row);
-				$("#row-"+row).append("<div class='col-sm'>" +
-					"<div class='card'>" +
-						"<h5 class='card-title product-title'>" + product.title + 
-						//( product.suggested? "<span class='badge badge-info suggested'>Suggested</span>" : "") + 
-						"</h5>" +
-						"<h6 class='card-title'>"+
-							"<i>" + product.store + "</i>" +
-						"</h6>" +
-						"<p class='card-text color-secondary-2-0'>" + product.price + "</p>" +
-						"<a class='btn background-primary-2 btn-buy' target='_blank' href='"+product.url+"' onclick=\"setViewed('" + product.title + "')\">Buy</a>" +
-					"</div>" +
-				"</div>");
-			})
-		}).fail(function(XMLHttpRequest, textStatus, errorThrown) {
-			console.log( "error " + textStatus);
-		});
+		} else {
+			$.getJSON("http://localhost:8080/COMP4601_FINAL_SERVER/crafty/query/" + $('#search-input').val(), function(data){
+				var row = 0;
+				$.each(data, function(index, product) {
+					if(index % 3 == 0){
+						$("#results").append("<div class='row' id='row-"+row+"'></div>");	
+						row++;
+					}
+				});
+				$("#loader").hide();
+				row = 0;
+				$.each(data, function(index, product) {
+					if(index % 3 == 0){
+						row++;
+					}
+					console.log("row-"+row);
+					$("#row-"+row).append("<div class='col-sm'>" +
+						"<div class='card'>" +
+							"<h5 class='card-title product-title'>" + product.title + 
+							//( product.suggested? "<span class='badge badge-info suggested'>Suggested</span>" : "") + 
+							"</h5>" +
+							"<h6 class='card-title'>"+
+								"<i>" + product.store + "</i>" +
+							"</h6>" +
+							"<p class='card-text color-secondary-2-0'>" + product.price + "</p>" +
+							"<a class='btn background-primary-2 btn-buy' target='_blank' href='"+product.url+"' onclick=\"setViewed('" + product.title + "')\">Buy</a>" +
+						"</div>" +
+					"</div>");
+				})
+			}).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+				console.log( "error " + textStatus);
+			});
+		}
+		
 	});
