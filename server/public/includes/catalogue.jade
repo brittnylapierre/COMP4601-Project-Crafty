@@ -2,11 +2,21 @@ div.search-form.form-inline.my-2.my-lg-0
 	input.form-control.mr-sm-2(type="search", placeholder="Search", id="search-input")
 	button.btn.btn-outline-warning.my-2.my-sm-0.color-secondary-1-0(id="search-button")
 		|Search
+	div.spinner(id="loader")
+		div.cube1
+		div.cube2
 div.results.container(id="results")
+	h5(id="startermsg")
+		i Search our catalogue for the cheapest prices on your favourite products!
 	div.row(id="row-1")
 script(type='text/javascript').
+	$( document ).ready(function() {
+		$("#loader").hide();
+	});
 	var products = [];
 	$("#search-button").click(function(){
+		$("#startermsg").hide();
+		$("#loader").show();
 		console.log("search");
 		$.getJSON("http://localhost:8080/COMP4601_FINAL_SERVER/crafty/query/" + $('#search-input').val(), function(data){
 			var row = 0;
@@ -16,6 +26,7 @@ script(type='text/javascript').
 					row++;
 				}
 			});
+			$("#loader").hide();
 			row = 0;
 			$.each(data, function(index, product) {
 				if(index % 3 == 0){
