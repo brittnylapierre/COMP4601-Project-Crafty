@@ -190,7 +190,7 @@ public class Server {
 			//System.out.println(currencyFormatter.format(price));
 			for(Product product : results){
 				list += "{";
-				list += "\"title\": \"" + product.getTitle() + "\", ";
+				list += "\"title\": \"" + product.getTitle().replace("\\", "").replace(",", "") + "\", ";
 				list += "\"store\": \"" + product.getStore() + "\", ";
 				list += "\"url\": \"" + product.getUrl() + "\", ";
 				list += "\"price\": \"" + currencyFormatter.format(product.getPrice()) + "\"";
@@ -223,7 +223,7 @@ public class Server {
 			//System.out.println(currencyFormatter.format(price));
 			for(Product product : results){
 				list += "{";
-				list += "\"title\": \"" + product.getTitle() + "\", ";
+				list += "\"title\": \"" + product.getTitle().replace("\\", "").replace(",", "") + "\", ";
 				list += "\"store\": \"" + product.getStore() + "\", ";
 				list += "\"url\": \"" + product.getUrl() + "\", ";
 				list += "\"price\": \"" + currencyFormatter.format(product.getPrice()) + "\",";
@@ -260,7 +260,7 @@ public class Server {
 		        ArrayList<Product> prods = pair.getValue();
 		        for(Product product: prods){
 			        list += "{";
-					list += "\"title\": \"" + product.getTitle() + "\", ";
+					list += "\"title\": \"" + product.getTitle().replace("\\", "").replace(",", "") + "\", ";
 					list += "\"store\": \"" + product.getStore() + "\", ";
 					list += "\"url\": \"" + product.getUrl() + "\", ";
 					list += "\"price\": \"" + currencyFormatter.format(product.getPrice())  + "\"";
@@ -477,7 +477,7 @@ public class Server {
 			//System.out.println(currencyFormatter.format(price));
 			for(Product product : results){
 				list += "{";
-				list += "\"title\": \"" + product.getTitle() + "\", ";
+				list += "\"title\": \"" + product.getTitle().replace("\\", "").replace(",", "") + "\", ";
 				list += "\"store\": \"" + product.getStore() + "\", ";
 				list += "\"url\": \"" + product.getUrl() + "\", ";
 				list += "\"price\": \"" + currencyFormatter.format(product.getPrice()) + "\"";
