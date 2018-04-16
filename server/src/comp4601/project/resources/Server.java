@@ -205,7 +205,8 @@ public class Server {
 				list += "\"title\": \"" + product.getTitle() + "\", ";
 				list += "\"store\": \"" + product.getStore() + "\", ";
 				list += "\"url\": \"" + product.getUrl() + "\", ";
-				list += "\"price\": \"" + currencyFormatter.format(product.getPrice()) + "\"";
+				list += "\"price\": \"" + currencyFormatter.format(product.getPrice()) + "\",";
+				list += "\"suggested\": " + product.isSuggested() + "";
 				list += "}";
 				if(curr != results.size()-1){
 					list += ",";

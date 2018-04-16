@@ -79,7 +79,9 @@ script(type='text/javascript').
 				console.log("row-"+row);
 				$("#row-"+row).append("<div class='col-sm'>" +
 					"<div class='card'>" +
-						"<h5 class='card-title product-title'>" + product.title + "</h5>" +
+						"<h5 class='card-title product-title'>" + product.title + 
+						( product.suggested? "<span class='badge badge-info suggested'>Suggested</span>" : "") + 
+						"</h5>" +
 						"<h6 class='card-title'>"+
 							"<i>" + product.store + "</i>" +
 						"</h6>" +

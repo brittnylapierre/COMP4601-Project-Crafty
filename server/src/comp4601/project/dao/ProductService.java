@@ -11,10 +11,12 @@ import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map.Entry;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -191,9 +193,11 @@ public class ProductService {
 		ArrayList<Product> rands =this.query(querry);
 		
 		for(Product p :rands){
+			p.setSuggested(false);
 			if(p.getPrice()>=ms&&p.getPrice()<=mas){
 				//System.out.println("found a match");
 				if(p.getStore().contentEquals(storeFave)){
+					p.setSuggested(true);
 					System.out.println("found a match");
 					products.add(p);
 					found++;
@@ -201,11 +205,30 @@ public class ProductService {
 			}
 		}
 		for(Product p :products){
-			rands.remove(p);
+			if(rands.contains(p)){
+				boolean r = rands.remove(p);
+				System.out.println(r);
+			}
 		}
 		products.addAll(rands);
-		
-		return products;
+		Collections.sort(products, 
+                (o1, o2) -> (Boolean.compare(o1.isSuggested(),o2.isSuggested())*-1));
+		// Store unique items in result.
+        ArrayList<Product> result = new ArrayList<>();
+
+        // Record encountered Strings in HashSet.
+        HashSet<String> set = new HashSet<>();
+
+        // Loop over argument list.
+        for (Product item : products) {
+
+            // If String is not in set, add it to the list and the set.
+            if (!set.contains(item.getTitle() + " " + item.getStore())) {
+                result.add(item);
+                set.add(item.getTitle() + " " + item.getStore());
+            }
+        }
+		return result;
 	}
 	public ArrayList<Product> recomended(String storeFave,String price){
 		int max=10;//max number of products to retreive
