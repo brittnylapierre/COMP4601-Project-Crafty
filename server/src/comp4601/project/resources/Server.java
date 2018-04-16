@@ -102,6 +102,23 @@ public class Server {
 			return null;
 		}
 		
+		@GET
+		@Path("dashboard")
+		@Produces({MediaType.TEXT_HTML})
+		public String viewDashboard(){
+			JadeTemplate template;
+			try {
+				template = Jade4J.getTemplate(path + "dashboard.jade");
+				Map<String, Object> model = new HashMap<String, Object>();
+				model.put("appName", "Crafty");
+				return Jade4J.render(template, model);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
 		/*@GET
 		@Path("profile")
 		@Produces({MediaType.TEXT_HTML})
