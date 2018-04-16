@@ -20,6 +20,8 @@ public class Product extends BasicDBObject {
 	String brand;
 	String store;
 	String url;
+	boolean suggested;
+
 	List<String> tokens;
 	double price;
 
@@ -137,5 +139,13 @@ public class Product extends BasicDBObject {
 
 	public void setTokens(List<String> tokens) {
 		this.tokens = tokens;
+	}
+	
+	public boolean isSuggested() {
+		return suggested;
+	}
+
+	public void setSuggested(boolean suggested) {
+		this.suggested = suggested;
 	}
 }

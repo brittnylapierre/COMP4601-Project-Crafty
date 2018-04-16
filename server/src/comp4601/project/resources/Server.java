@@ -182,15 +182,17 @@ public class Server {
 			list += "]";
 			return Response.ok(list).build();//results;
 		}
+		
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
-		@Path("queryRecommend/{terms}/{user}/")
-		public Response queryProducts(@PathParam("terms") String terms,@PathParam("user") String user){
+		@Path("queryRecommend/{terms}")
+		public Response queryProducts(@CookieParam("token") Cookie cookie, @PathParam("terms") String terms){
+			String token = cookie.getValue();
+			UserService u = new UserService();
+			User user = u.findUserWithToken(token);
 			NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
 			ProductService p = new ProductService();
-			UserService u = new UserService();
-			System.out.println(user);
-			User use=u.findOne(user);
+			User use=u.findOne(user.getUsername());
 			String store= use.getMostShoppedAt();
 			String price=use.getMostSpent();
 			ArrayList<Product> results =p.recomendedSearch(store, price, terms);

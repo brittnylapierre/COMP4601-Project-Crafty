@@ -62,7 +62,7 @@ script(type='text/javascript').
 		});
 		$("#loader").show();
 		console.log("search");
-		$.getJSON("http://localhost:8080/COMP4601_FINAL_SERVER/crafty/query/" + $('#search-input').val(), function(data){
+		$.getJSON("http://localhost:8080/COMP4601_FINAL_SERVER/crafty/queryRecommend/" + $('#search-input').val(), function(data){
 			var row = 0;
 			$.each(data, function(index, product) {
 				if(index % 3 == 0){
