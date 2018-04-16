@@ -23,7 +23,7 @@ import javax.json.JsonReader;
 import javax.json.JsonValue;
 
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
+//import org.apache.tomcat.util.http.fileupload.FileUtils;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -37,7 +37,8 @@ import comp4601.project.models.Product;
 import comp4601.project.models.Product.Condition;
 
 public class ProductService {
-	String path = "C:/Users/IBM_ADMIN/dev/COMP4601-Project/data";
+	//String path = "C:/Users/IBM_ADMIN/dev/COMP4601-Project/data";
+	String path = "/Users/kellymaclauchlan/code/mobile/project/COMP4601-Project/data";
 	MongoClient mongoClient;
 	DB database;
 	DBCollection productCollection;
@@ -178,6 +179,47 @@ public class ProductService {
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+		return products;
+	}
+	public ArrayList<Product> getRandomProducts(int limit){
+		ArrayList<Product> products=new ArrayList<Product>();
+		long count = productCollection.getCount();
+		//int limit = count; //or whatever you want
+//https://stackoverflow.com/questions/12912317/get-random-documents-records-from-mongodb-with-java
+		if (count <= limit) {//if you are asking for the whole collection or more 
+		  DBCursor cursor = productCollection.find();
+		  while (cursor.hasNext()) {
+			  BasicDBObject result = (BasicDBObject) cursor.next();
+				String title = result.getString("title");
+				String store = result.getString("store");
+				String url = result.getString("url");
+				String brand = result.getString("brand");
+				Double price = result.getDouble("price");
+				Product p = new Product(title,store,url,price);
+				products.add(p);
+		  }
+
+		} else {//should always fall in here 
+		  long skip = Math.round((double) count / limit);
+
+		  DBCursor cursor = productCollection.find();
+
+		  while (products.size() < limit) {
+		    int offset = (int) ((skip * products.size() + (int) ((Math.random() * skip) % count)) % count);
+		    //System.out.println(offset);
+		    DBObject next = cursor.skip(offset).next();
+		    BasicDBObject result = (BasicDBObject)next;
+		    String title = result.getString("title");
+			String store = result.getString("store");
+			String url = result.getString("url");
+			String brand = result.getString("brand");
+			Double price = result.getDouble("price");
+			Product p = new Product(title,store,url,price);
+			products.add(p);
+		    cursor = productCollection.find();
+		  }
+
 		}
 		return products;
 	}
