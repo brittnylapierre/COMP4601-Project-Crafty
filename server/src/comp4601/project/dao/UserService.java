@@ -144,6 +144,7 @@ public class UserService {
 		//System.out.println("in db fn 4");
 		BasicDBObject result = (BasicDBObject) userCollection.findOne(query);	
 		//System.out.println("in db fn 5");
+		
 		if(!result.isEmpty()){
 			//System.out.println("user 1!");
 			String usernameRes = result.getString("username");
@@ -174,6 +175,7 @@ public class UserService {
 			
 			return u;		
 		}
+		
 		//System.out.println("no user :-(");
 		return null;
 	}
