@@ -32,6 +32,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
@@ -102,6 +103,7 @@ public class Server {
 			return null;
 		}
 		
+		@Secured
 		@GET
 		@Path("dashboard")
 		@Produces({MediaType.TEXT_HTML})
@@ -109,6 +111,34 @@ public class Server {
 			JadeTemplate template;
 			try {
 				template = Jade4J.getTemplate(path + "dashboard.jade");
+				/*
+				NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+				UserService u = new UserService();
+				HashMap<String, ArrayList<Product>> results = u.getUserWatchedQueryProducts(username);*/
+				
+				Map<String, Object> model = new HashMap<String, Object>();
+				model.put("appName", "Crafty");
+				model.put("authenticated", false);
+				return Jade4J.render(template, model);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+		@GET
+		@Path("login")
+		@Produces({MediaType.TEXT_HTML})
+		public String viewLogin(){
+			JadeTemplate template;
+			try {
+				template = Jade4J.getTemplate(path + "login.jade");
+				/*
+				NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+				UserService u = new UserService();
+				HashMap<String, ArrayList<Product>> results = u.getUserWatchedQueryProducts(username);*/
+				
 				Map<String, Object> model = new HashMap<String, Object>();
 				model.put("appName", "Crafty");
 				return Jade4J.render(template, model);
