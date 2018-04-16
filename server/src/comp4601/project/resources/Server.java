@@ -278,13 +278,49 @@ public class Server {
 			for(int i=0;i<500;i++){//create 500 users with 100 random products each time is avout 1 min / 100 prodducts
 				String name="name"+i;
 				u.createUser(name, "pass");
+				User use=u.findOne(name, "pass");
 				ArrayList<Product>products= p.getRandomProducts(100);//get 100 random products
 				for(Product prod : products){
 					u.addViewedProduct(name, prod.getTitle());
 					if(i==0){
 					s+=prod.getTitle()+'\n';
+					}//TODO add to other places where items are viewed
+					switch(prod.getStore()){
+						case "Wallacks":
+							use.wallack++;
+							break;
+						case "Jerrys":
+							use.jerrys++;
+							break;
+						case "Above Ground Art Supplies":
+							use.aboveground++;
+							break;
+						case "Deserres":
+							use.deserres++;
+							break;
+						case "Art Shack":
+							use.artshack++;
+							break;		
 					}
+					//adding to price vars. 
+					double price = prod.getPrice();
+					if(price<20){
+						use.oneTwenty++;
+						
+					}else if(price<50){
+						use.twentyFifty++;
+						
+					}else if(price<100){
+						use.fiftyHunderd++;
+					}else if(price<300){
+						use.hundredThree++;
+					}else{
+						use.overThree++;
+					}
+					
+						
 				}
+				u.updateUser(name, use);
 			}
 			return "Welcome to Crafty\n"+s;
 		}

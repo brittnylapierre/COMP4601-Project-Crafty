@@ -4,6 +4,16 @@ public class User {
 	String username;
 	String token;
 	long accessTimeMS;
+	public int wallack=0;
+	public int aboveground=0;
+	public int artshack=0;
+	public int jerrys=0;
+	public int deserres=0;
+	public int oneTwenty=0;
+	public int twentyFifty=0;
+	public int fiftyHunderd=0;
+	public int hundredThree=0;
+	public int overThree=0;
 
 	public User(String username, String token) {
 		// TODO Auto-generated constructor stub
