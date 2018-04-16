@@ -186,9 +186,33 @@ public class UserService {
 		BasicDBObject result = (BasicDBObject) userCollection.findOne(query);	
 
 		if(result != null && !result.isEmpty()){
+			//System.out.println("user 1!");
 			String usernameRes = result.getString("username");
-			Long accessTimeMS = result.getLong("accessTimeMS");
-			return new User(usernameRes, token, accessTimeMS);		
+			Long accessTimeMS = (long) 0;
+			if(result.containsField("token")){
+				token = result.getString("token");
+			}
+			if(result.containsField("accessTimeMS")){
+				accessTimeMS = result.getLong("accessTimeMS");
+			}
+			int community=0;
+			//System.out.println("user 2!");
+			if(result.containsField("community")){
+				community = result.getInt("community");
+			}
+			int wallack = result.getInt("wallack");
+			int aboveground = result.getInt("abovegound");
+			int artshack = result.getInt("artshack");
+			int jerrys = result.getInt("jerrys");
+			int deserres = result.getInt("deserres");
+			int oneTwenty = result.getInt("oneTwenty");
+			int twentyFifty = result.getInt("twentyFifty");
+			int fiftyHundred = result.getInt("fiftyHunderd");
+			int hundredThree = result.getInt("hundredThree");
+			int overThree = result.getInt("overThree");
+			User u = new User(usernameRes, token, accessTimeMS, wallack, aboveground, artshack, jerrys, deserres, oneTwenty, twentyFifty, fiftyHundred, hundredThree, overThree, community);
+			
+			return u;		
 		}
 		return null;
 	}

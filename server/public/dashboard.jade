@@ -30,6 +30,7 @@ script(type='text/javascript').
 	}
 	console.log(Cookies.get('token'));
 	$( document ).ready(function() {
+		
 		$.getJSON("http://localhost:8080/COMP4601_FINAL_SERVER/crafty/watching", function(data){
 			var dataString = "<ul class='list-group'>";
 			$.each(data, function(key, value) {
@@ -37,6 +38,25 @@ script(type='text/javascript').
 				console.log(value);
 				dataString = "<li class='list-group-item'><i>Watched Item</i><br><h4>"+value.title+"</h4><span class='watch-icon' id='unwatch-item' data-toggle='tooltip' data-placement='top' title='Unwatch' onclick=\"unwatch('"+value.title+"')\"><i class='fas fa-heart' id='watch'></i><i class='far fa-heart' id='unwatch'></i></span></li><div class='row'>";
 				$.each(value.topProducts, function(index, product) {
+					console.log(index);
+					console.log(product);
+					dataString += "<div class='watching-query'><div class='card product-card'>" +
+						"<h5 class='card-title product-title'>" + product.title + "</h5>" +
+						"<h6 class='card-title'>"+
+							"<i>" + product.store + "</i>" +
+						"</h6>" +
+						"<p class='card-text color-secondary-2-0'>" + product.price + "</p>" +
+						"<a class='btn background-primary-2 btn-buy' target='_blank' href='"+product.url+"' onclick=\"setViewed('" + product.title + "')\">Buy</a>" +
+					"</div></div>";
+				});
+				dataString += "</div>";
+				$("#results").append(dataString);
+			});
+			//recomended
+			$.getJSON("http://localhost:8080/COMP4601_FINAL_SERVER/crafty/recomended", function(data){
+				console.log(data);
+				dataString = "<li class='list-group-item'><h4>Suggested Items</h4></li><div class='row'>";
+				$.each(data.recommended, function(index, product) {
 					console.log(index);
 					console.log(product);
 					dataString += "<div class='watching-query'><div class='card product-card'>" +

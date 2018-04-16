@@ -437,7 +437,7 @@ public class Server {
 		
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
-		@Path("recomended/{user}")
+		@Path("recomended")
 		public Response recommendProducts(@CookieParam("token") Cookie cookie){
 			NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
 			ProductService p = new ProductService();
@@ -450,7 +450,7 @@ public class Server {
 //			store="Deserres";
 //			price="two";
 			ArrayList<Product> results = p.recomended(store, price);
-			String list = "[";
+			String list = "{ \"recommended\": [";
 			int curr = 0;
 			//double price = 2.50000000000003;
 			//System.out.println(currencyFormatter.format(price));
@@ -466,7 +466,7 @@ public class Server {
 				}
 				curr++;
 			}
-			list += "]";
+			list += "] }";
 			return Response.ok(list).build();//results;
 		}
 }
