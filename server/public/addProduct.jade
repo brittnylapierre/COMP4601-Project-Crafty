@@ -1,0 +1,40 @@
+doctype html
+html(lang="en")
+	include ./includes/head.jade
+	body
+		include ./includes/nav.jade
+		div.container
+			h5.list-group-item(id="add-product-title")
+				|Add a product
+			div(id="product-form")
+				div.form-group
+					label(for="titleinput")
+						|Product Name
+					input.form-control(id="titleinput", type="text")
+					label(for="storeinput")
+						|Store
+					input.form-control(id="storeinput", type="text")
+					label(for="urlinput")
+						|Link
+					input.form-control(id="urlinput", type="text")
+					label(for="brandinput")
+						|Brand
+					input.form-control(id="brandinput", type="text")
+					label(for="priceinput")
+						|Price
+					input.form-control(id="price", type="number")
+					button.btn.background-primary-2(id="prod-button")
+						|Add Product
+script(type='text/javascript').
+	$("#prod-button").click(function(){
+		$.post( "http://localhost:8080/COMP4601_FINAL_SERVER/crafty/add-product", { 
+			title: $('#titleinput').val(), 
+			store: $('#storeinput').val(),
+			url: $('#urlinput').val(),
+			brand: $('#brandinput').val(),
+			price: $('#price').val()
+		}, function( data ) {
+			alert("Product added!")
+		});
+	});
+	

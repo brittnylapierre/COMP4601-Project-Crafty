@@ -145,7 +145,28 @@ public class Server {
 			}
 			return null;
 		}
-		
+		//
+		@GET
+		@Path("addProduct")
+		@Produces({MediaType.TEXT_HTML})
+		public String addProduct(){
+			JadeTemplate template;
+			try {
+				template = Jade4J.getTemplate(path + "addproduct.jade");
+				/*
+				NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+				UserService u = new UserService();
+				HashMap<String, ArrayList<Product>> results = u.getUserWatchedQueryProducts(username);*/
+				
+				Map<String, Object> model = new HashMap<String, Object>();
+				model.put("appName", "Crafty");
+				return Jade4J.render(template, model);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
 		
 		@GET
 		@Produces(MediaType.TEXT_PLAIN)
