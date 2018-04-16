@@ -324,4 +324,68 @@ public class Server {
 			}
 			return "Welcome to Crafty\n"+s;
 		}
+		@GET
+		@Produces(MediaType.TEXT_PLAIN)
+		@Path("generateCommunities")
+		public String generateCommunitites(){
+			ProductService p = new ProductService();
+			UserService u = new UserService();
+			String s = "user 0's items are:\n";
+			
+			try {
+				ArrayList<User> users = u.getAllUsers();
+				Communitizer community = new Communitizer(users.size());
+				int i=0;
+				for(User use :users){
+					community.addUser(use, i);
+					i++;
+				}
+				community.algorithm();
+				 i=0;
+				for(User use :users){
+					use.cluster=community.getCommuityForUser(i);
+					i++;
+					u.updateUser(use.getUsername(), use);
+				}
+				
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return "Users are now in communities\n"+s;
+		}
+		@GET
+		@Produces(MediaType.APPLICATION_JSON)
+		@Path("recomended/{user}")
+		public Response recommendProducts(@PathParam("user") String user){
+			
+			NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
+			UserService u = new UserService();
+			ProductService p = new ProductService();
+			User use=u.findOne(user);
+			String store= use.getMostShoppedAt();
+			String price=use.getMostSpent();
+//			store="Deserres";
+//			price="two";
+			ArrayList<Product> results = p.recomended(store, price);
+			String list = "[";
+			int curr = 0;
+			//double price = 2.50000000000003;
+			//System.out.println(currencyFormatter.format(price));
+			for(Product product : results){
+				list += "{";
+				list += "\"title\": \"" + product.getTitle() + "\", ";
+				list += "\"store\": \"" + product.getStore() + "\", ";
+				list += "\"url\": \"" + product.getUrl() + "\", ";
+				list += "\"price\": \"" + currencyFormatter.format(product.getPrice()) + "\"";
+				list += "}";
+				if(curr != results.size()-1){
+					list += ",";
+				}
+				curr++;
+			}
+			list += "]";
+			return Response.ok(list).build();//results;
+		}
 }

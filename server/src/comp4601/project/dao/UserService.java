@@ -1,18 +1,23 @@
 package comp4601.project.dao;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
 
 import comp4601.project.models.Product;
 import comp4601.project.models.User;
+import comp4601.project.models.Product.Condition;
 
 public class UserService {
 	MongoClient mongoClient;
@@ -75,6 +80,7 @@ public class UserService {
 			newDocument.append("fiftyHunderd", u.fiftyHunderd);
 			newDocument.append("hundredThree", u.hundredThree);
 			newDocument.append("overThree", u.overThree);
+			newDocument.append("cluster", u.cluster);
 			BasicDBObject newDocument2 = new BasicDBObject("$set",newDocument);
 			userCollection.update(searchQuery, newDocument2);
 			return true;
@@ -105,8 +111,67 @@ public class UserService {
 			if(result.containsField("accessTimeMS")){
 				accessTimeMS = result.getLong("accessTimeMS");
 			}
+			int community=0;
 			//System.out.println("user 2!");
-			return new User(usernameRes, token, accessTimeMS);		
+			if(result.containsField("community")){
+				community = result.getInt("community");
+			}
+			int wallack = result.getInt("wallack");
+			int aboveground = result.getInt("abovegound");
+			int artshack = result.getInt("artshack");
+			int jerrys = result.getInt("jerrys");
+			int deserres = result.getInt("deserres");
+			int oneTwenty = result.getInt("oneTwenty");
+			int twentyFifty = result.getInt("twentyFifty");
+			int fiftyHundred = result.getInt("fiftyHunderd");
+			int hundredThree = result.getInt("hundredThree");
+			int overThree = result.getInt("overThree");
+			User u = new User(usernameRes, token, accessTimeMS, wallack, aboveground, artshack, jerrys, deserres, oneTwenty, twentyFifty, fiftyHundred, hundredThree, overThree, community);
+			
+			return u;		
+		}
+		//System.out.println("no user :-(");
+		return null;
+	}
+	public User findOne(String username){
+		//System.out.println("in db fn");
+		BasicDBObject query = new BasicDBObject();
+		//System.out.println("in db fn 2");
+		query.put("username", username);
+		//System.out.println("in db fn 3");
+		//query.put("password", password);
+		//System.out.println("in db fn 4");
+		BasicDBObject result = (BasicDBObject) userCollection.findOne(query);	
+		//System.out.println("in db fn 5");
+		if(!result.isEmpty()){
+			//System.out.println("user 1!");
+			String usernameRes = result.getString("username");
+			String token = "";
+			Long accessTimeMS = (long) 0;
+			if(result.containsField("token")){
+				token = result.getString("token");
+			}
+			if(result.containsField("accessTimeMS")){
+				accessTimeMS = result.getLong("accessTimeMS");
+			}
+			int community=0;
+			//System.out.println("user 2!");
+			if(result.containsField("community")){
+				community = result.getInt("community");
+			}
+			int wallack = result.getInt("wallack");
+			int aboveground = result.getInt("abovegound");
+			int artshack = result.getInt("artshack");
+			int jerrys = result.getInt("jerrys");
+			int deserres = result.getInt("deserres");
+			int oneTwenty = result.getInt("oneTwenty");
+			int twentyFifty = result.getInt("twentyFifty");
+			int fiftyHundred = result.getInt("fiftyHunderd");
+			int hundredThree = result.getInt("hundredThree");
+			int overThree = result.getInt("overThree");
+			User u = new User(usernameRes, token, accessTimeMS, wallack, aboveground, artshack, jerrys, deserres, oneTwenty, twentyFifty, fiftyHundred, hundredThree, overThree, community);
+			
+			return u;		
 		}
 		//System.out.println("no user :-(");
 		return null;
@@ -175,5 +240,38 @@ public class UserService {
 			}
 		}
 		return results;	
+	}
+	public ArrayList<User> getAllUsers() throws IOException{
+		ArrayList<User> users= new ArrayList<User>();
+		DBCursor cursor = userCollection.find();
+		while(cursor.hasNext()){
+			BasicDBObject result = (BasicDBObject) cursor.next();
+			String usernameRes = result.getString("username");
+			String token = "";
+			Long accessTimeMS = (long) 0;
+			int community=0;
+			if(result.containsField("token")){
+				token = result.getString("token");
+			}
+			if(result.containsField("accessTimeMS")){
+				accessTimeMS = result.getLong("accessTimeMS");
+			}
+			if(result.containsField("community")){
+				community = result.getInt("community");
+			}
+			int wallack = result.getInt("wallack");
+			int aboveground = result.getInt("abovegound");
+			int artshack = result.getInt("artshack");
+			int jerrys = result.getInt("jerrys");
+			int deserres = result.getInt("deserres");
+			int oneTwenty = result.getInt("oneTwenty");
+			int twentyFifty = result.getInt("twentyFifty");
+			int fiftyHundred = result.getInt("fiftyHunderd");
+			int hundredThree = result.getInt("hundredThree");
+			int overThree = result.getInt("overThree");
+			User p = new User(usernameRes, token, accessTimeMS, wallack, aboveground, artshack, jerrys, deserres, oneTwenty, twentyFifty, fiftyHundred, hundredThree, overThree, community);
+			users.add(p);
+		}
+		return users;
 	}
 }

@@ -160,6 +160,56 @@ public class ProductService {
 		}
 		return products;
 	}
+	public ArrayList<Product> recomended(String storeFave,String price){
+		int max=10;//max number of products to retreive
+		int found=0;
+		int ms=0;
+		int mas=1000;
+		if(price=="one"){
+			ms=0;
+			mas=20;
+		}if(price=="two"){
+			ms=20;
+			mas=50;
+		}
+		if(price=="three"){
+			ms=50;
+			mas=100;
+		}
+		if(price=="four"){
+			ms=100;
+			mas=300;
+		}
+		if(price=="five"){
+			ms=300;
+			mas=300000;
+		}
+		ArrayList<Product> products = new ArrayList<Product>();
+		//DBObject query = new Product(new StandardAnalyzer()).createQuery("store",storeFave, Condition.ALL);
+		DBCursor cursor = productCollection.find();	
+		//cursor.sort(new BasicDBObject("price", 1));
+		System.out.println("found a match");
+		while(cursor.hasNext()){
+			System.out.println("found a match");
+			BasicDBObject result = (BasicDBObject) cursor.next();
+			
+			String title = result.getString("title");
+			String store = result.getString("store");
+			String url = result.getString("url");
+			String brand = result.getString("brand");
+			Double priceed = result.getDouble("price");
+			if(priceed>=ms&&priceed<=mas){
+			Product p = new Product(title,store,url,priceed);
+			products.add(p);
+			System.out.println("found a match");
+			found++;
+			if(found==max){
+				return products;
+			}
+			}
+		}
+		return products;
+	}
 
 	public ArrayList<Product> queryTop(String queryString, int n){
 		ArrayList<Product> products = new ArrayList<Product>();
