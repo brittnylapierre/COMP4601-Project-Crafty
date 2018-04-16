@@ -151,10 +151,10 @@ public class Server {
 			//System.out.println(currencyFormatter.format(price));
 			for(Product product : results){
 				list += "{";
-				list += "title: '" + product.getTitle() + "', ";
-				list += "store: '" + product.getStore() + "', ";
-				list += "url: '" + product.getUrl() + "', ";
-				list += "price: '" + currencyFormatter.format(product.getPrice()) + "'";
+				list += "\"title\": \"" + product.getTitle() + "\", ";
+				list += "\"store\": \"" + product.getStore() + "\", ";
+				list += "\"url\": \"" + product.getUrl() + "\", ";
+				list += "\"price\": \"" + currencyFormatter.format(product.getPrice()) + "\"";
 				list += "}";
 				if(curr != results.size()-1){
 					list += ",";
@@ -186,10 +186,10 @@ public class Server {
 		        ArrayList<Product> prods = pair.getValue();
 		        for(Product product: prods){
 			        list += "{";
-					list += "title: '" + product.getTitle() + "', ";
-					list += "store: '" + product.getStore() + "', ";
-					list += "url: '" + product.getUrl() + "', ";
-					list += "price: " + product.getPrice() + "";
+					list += "\"title\": \"" + product.getTitle() + "\", ";
+					list += "\"store\": \"" + product.getStore() + "\", ";
+					list += "\"url\": \"" + product.getUrl() + "\", ";
+					list += "\"price\": \"" + currencyFormatter.format(product.getPrice())  + "\"";
 					list += "}";
 					if(currProd != prods.size()-1){
 						list += ",";
@@ -219,7 +219,7 @@ public class Server {
 			Product newProd = new Product(title, store, url, price);
 			newProd.setBrand(brand);
 			p.addProductToDB(newProd);
-			return Response.ok("{success: true}").build();
+			return Response.ok("{\"success\": true}").build();
 		}
 		
 		
@@ -231,7 +231,7 @@ public class Server {
 		public Response watchQuery(@FormParam("username") String username,@FormParam("terms") String terms){
 			UserService u = new UserService();
 			u.watchQuery(username, terms);
-			return Response.ok("{success: true}").build();
+			return Response.ok("{\"success\": true}").build();
 		}
 		
 		@Secured
@@ -242,7 +242,7 @@ public class Server {
 		public Response removeWatchQuery(@FormParam("username") String username, @FormParam("terms") String terms){
 			UserService u = new UserService();
 			u.removeWatchQuery(username, terms);
-			return Response.ok("{success: true}").build();
+			return Response.ok("{\"success\": true}").build();
 		}
 		
 		@Secured
@@ -253,7 +253,7 @@ public class Server {
 		public Response addViewed(@FormParam("username") String username, @FormParam("product") String product){
 			UserService u = new UserService();
 			u.addViewedProduct(username, product);
-			return Response.ok("{success: true}").build();
+			return Response.ok("{\"success\": true}").build();
 		}
 		
 		@POST
@@ -264,6 +264,6 @@ public class Server {
 				@FormParam("password") String password){
 			UserService u = new UserService();
 			boolean success = u.createUser(username, password);
-			return Response.ok("{success:"+success+"}").build();
+			return Response.ok("{\"success\":"+success+"}").build();
 		}
 }
