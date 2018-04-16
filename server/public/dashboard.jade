@@ -1,8 +1,33 @@
 doctype html
 html(lang="en")
-    include ./includes/head.jade
-    body
-        include ./includes/nav.jade
-        h1 hi
+	include ./includes/head.jade
+	body
+		include ./includes/nav.jade
+		div(id="results")
+
 script(type='text/javascript').
-   console.log(Cookies.get('token'));
+	console.log(Cookies.get('token'));
+	$( document ).ready(function() {
+		$.getJSON("http://localhost:8080/COMP4601_FINAL_SERVER/crafty/watching", function(data){
+			var dataString = "<ul class='list-group'>";
+			$.each(data, function(key, value) {
+				console.log(key);
+				console.log(value);
+				dataString = "<li class='list-group-item'><i>Watched Item</i><br><h4>"+value.title+"</h4></li><div class='row'>";
+				$.each(value.topProducts, function(index, product) {
+					console.log(index);
+					console.log(product);
+					dataString += "<div class='watching-query'><div class='card product-card'>" +
+						"<h5 class='card-title product-title'>" + product.title + "</h5>" +
+						"<h6 class='card-title'>"+
+							"<i>" + product.store + "</i>" +
+						"</h6>" +
+						"<p class='card-text color-secondary-2-0'>" + product.price + "</p>" +
+						"<a class='btn background-primary-2 btn-buy' target='_blank' href='"+product.url+"'>Buy</a>" +
+					"</div></div>";
+				});
+				dataString += "</div>";
+				$("#results").append(dataString);
+			});
+		});
+	});

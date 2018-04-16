@@ -37,8 +37,8 @@ import comp4601.project.models.Product;
 import comp4601.project.models.Product.Condition;
 
 public class ProductService {
-	//String path = "C:/Users/IBM_ADMIN/dev/COMP4601-Project/data";
-	String path = "/Users/kellymaclauchlan/code/mobile/project/COMP4601-Project/data";
+	String path = "C:/Users/IBM_ADMIN/dev/COMP4601-Project/data";
+	//String path = "/Users/kellymaclauchlan/code/mobile/project/COMP4601-Project/data";
 	MongoClient mongoClient;
 	DB database;
 	DBCollection productCollection;
@@ -84,6 +84,9 @@ public class ProductService {
 							double priceD = 0.0;
 							if(price.toString().length() > 0){
 								priceD = Double.parseDouble(price.toString().replaceAll("(\"|,)", ""));
+								if(usd){
+									priceD = priceD * 1.3;
+								}
 							}
 							//analyzer
 							String titleString = title.toString().replaceAll("\"", "");
