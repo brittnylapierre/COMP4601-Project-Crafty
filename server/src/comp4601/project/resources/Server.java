@@ -45,6 +45,7 @@ import org.jsoup.nodes.Element;
 import comp4601.project.dao.ProductService;
 import comp4601.project.dao.UserService;
 import comp4601.project.models.Product;
+import comp4601.project.models.User;
 import de.neuland.jade4j.Jade4J;
 import de.neuland.jade4j.template.JadeTemplate;
 import sun.misc.BASE64Encoder;
@@ -78,11 +79,11 @@ public class Server {
 		
 
 		private String name;
-		private String ROOT = "C:/Users/IBM_ADMIN/dev/COMP4601-Project/server";
+		//TODO:change root
+		//private String ROOT = "C:/Users/IBM_ADMIN/dev/COMP4601-Project/server";
 
+		String ROOT=  "/Users/kellymaclauchlan/code/mobile/project/COMP4601-Project/server";
 		String path = ROOT + "/public/";
-		//String ROOT= "/Users/kellymaclauchlan/code/mobile/a2/COMP4601A2/";
-		
 		public Server() {
 			name = "Crafty";
 		}
@@ -312,5 +313,62 @@ public class Server {
 			UserService u = new UserService();
 			boolean success = u.createUser(username, password);
 			return Response.ok("{\"success\":"+success+"}").build();
+		}
+		
+		@GET
+		@Produces(MediaType.TEXT_PLAIN)
+		@Path("generateUsers")
+		public String generateUsers(){
+			ProductService p = new ProductService();
+			UserService u = new UserService();
+			String s = "user 0's items are:\n";
+			for(int i=0;i<500;i++){//create 500 users with 100 random products each time is avout 1 min / 100 prodducts
+				String name="name"+i;
+				u.createUser(name, "pass");
+				User use=u.findOne(name, "pass");
+				ArrayList<Product>products= p.getRandomProducts(100);//get 100 random products
+				for(Product prod : products){
+					u.addViewedProduct(name, prod.getTitle());
+					if(i==0){
+					s+=prod.getTitle()+'\n';
+					}//TODO add to other places where items are viewed
+					switch(prod.getStore()){
+						case "Wallacks":
+							use.wallack++;
+							break;
+						case "Jerrys":
+							use.jerrys++;
+							break;
+						case "Above Ground Art Supplies":
+							use.aboveground++;
+							break;
+						case "Deserres":
+							use.deserres++;
+							break;
+						case "Art Shack":
+							use.artshack++;
+							break;		
+					}
+					//adding to price vars. 
+					double price = prod.getPrice();
+					if(price<20){
+						use.oneTwenty++;
+						
+					}else if(price<50){
+						use.twentyFifty++;
+						
+					}else if(price<100){
+						use.fiftyHunderd++;
+					}else if(price<300){
+						use.hundredThree++;
+					}else{
+						use.overThree++;
+					}
+					
+						
+				}
+				u.updateUser(name, use);
+			}
+			return "Welcome to Crafty\n"+s;
 		}
 }

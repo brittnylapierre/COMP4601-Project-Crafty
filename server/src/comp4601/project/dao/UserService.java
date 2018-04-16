@@ -38,6 +38,17 @@ public class UserService {
 			BasicDBObject newDocument = new BasicDBObject();
 			newDocument.put("username", username);
 			newDocument.put("password", password);
+
+			newDocument.put("wallack", 0);
+			newDocument.put("abovegound", 0);
+			newDocument.put("artshack", 0);
+			newDocument.put("jerrys", 0);
+			newDocument.put("deserres", 0);
+			newDocument.put("oneTwenty", 0);
+			newDocument.put("twentyFifty", 0);
+			newDocument.put("fiftyHunderd", 0);
+			newDocument.put("hundredThree", 0);
+			newDocument.put("overThree", 0);
 			userCollection.insert(newDocument);
 			return true;
 		} catch(Exception e){
@@ -46,7 +57,33 @@ public class UserService {
 			return false;
 		}
 	}
-	
+	public boolean updateUser(String username, User u){
+		//craftyDB products
+		try {
+			BasicDBObject searchQuery = new BasicDBObject().append("username", username);
+			
+			//userCollection.update(searchQuery, newDocument2);
+			BasicDBObject newDocument = new BasicDBObject();
+			
+			newDocument.append("wallack",u.wallack);
+			newDocument.append("abovegound", u.aboveground);
+			newDocument.append("artshack", u.artshack);
+			newDocument.append("jerrys", u.jerrys);
+			newDocument.append("deserres", u.deserres);
+			newDocument.append("oneTwenty",u.oneTwenty);
+			newDocument.append("twentyFifty", u.twentyFifty);
+			newDocument.append("fiftyHunderd", u.fiftyHunderd);
+			newDocument.append("hundredThree", u.hundredThree);
+			newDocument.append("overThree", u.overThree);
+			BasicDBObject newDocument2 = new BasicDBObject("$set",newDocument);
+			userCollection.update(searchQuery, newDocument2);
+			return true;
+		} catch(Exception e){
+			System.out.println(e.getMessage());
+			System.out.println("error updating user");
+			return false;
+		}
+	}
 	public User findOne(String username, String password){
 		//System.out.println("in db fn");
 		BasicDBObject query = new BasicDBObject();
