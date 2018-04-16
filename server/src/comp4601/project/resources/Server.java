@@ -146,32 +146,6 @@ public class Server {
 			return null;
 		}
 		
-		/*@GET
-		@Path("profile")
-		@Produces({MediaType.TEXT_HTML})
-		public InputStream viewProfile(){
-			File f = new File(path + "index.html");
-			try {
-				return new FileInputStream(f);
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}*/
-		
-		/*@GET
-		@Produces(MediaType.TEXT_PLAIN)
-		public String sayPlainTextHello(){
-			return "Welcome to Crafty";
-		}
-		
-		@GET
-		@Produces(MediaType.TEXT_HTML)
-		public String sayHTML() {
-			return "<html><head></head><body>"+this.name+"</body></html>";
-		}*/
-		
 		
 		@GET
 		@Produces(MediaType.TEXT_PLAIN)
@@ -268,35 +242,44 @@ public class Server {
 		}
 		
 		
-		@Secured
+		//@Secured
 		@POST
 		@Produces(MediaType.APPLICATION_JSON)
 		@Path("watch")
 		@Consumes("application/x-www-form-urlencoded;charset=UTF-8") 
-		public Response watchQuery(@FormParam("username") String username,@FormParam("terms") String terms){
+		public Response watchQuery(@CookieParam("token") Cookie cookie,@FormParam("terms") String terms){
+			String token = cookie.getValue();
 			UserService u = new UserService();
+			User user = u.findUserWithToken(token);
+			String username = user.getUsername();
 			u.watchQuery(username, terms);
 			return Response.ok("{\"success\": true}").build();
 		}
 		
-		@Secured
+		//@Secured
 		@DELETE
 		@Produces(MediaType.APPLICATION_JSON)
 		@Consumes("application/x-www-form-urlencoded;charset=UTF-8") 
 		@Path("unwatch")
-		public Response removeWatchQuery(@FormParam("username") String username, @FormParam("terms") String terms){
+		public Response removeWatchQuery(@CookieParam("token") Cookie cookie, @FormParam("terms") String terms){
+			String token = cookie.getValue();
 			UserService u = new UserService();
+			User user = u.findUserWithToken(token);
+			String username = user.getUsername();
 			u.removeWatchQuery(username, terms);
 			return Response.ok("{\"success\": true}").build();
 		}
 		
-		@Secured
+		//@Secured
 		@POST
 		@Produces(MediaType.APPLICATION_JSON)
 		@Path("viewed")
 		@Consumes("application/x-www-form-urlencoded;charset=UTF-8") 
-		public Response addViewed(@FormParam("username") String username, @FormParam("product") String product){
+		public Response addViewed(@CookieParam("token") Cookie cookie, @FormParam("product") String product){
+			String token = cookie.getValue();
 			UserService u = new UserService();
+			User user = u.findUserWithToken(token);
+			String username = user.getUsername();
 			u.addViewedProduct(username, product);
 			return Response.ok("{\"success\": true}").build();
 		}
@@ -368,6 +351,7 @@ public class Server {
 			}
 			return "Welcome to Crafty\n"+s;
 		}
+		
 		@GET
 		@Produces(MediaType.TEXT_PLAIN)
 		@Path("generateCommunities")
@@ -399,15 +383,17 @@ public class Server {
 			
 			return "Users are now in communities\n"+s;
 		}
+		
 		@GET
 		@Produces(MediaType.APPLICATION_JSON)
 		@Path("recomended/{user}")
-		public Response recommendProducts(@PathParam("user") String user){
-			
+		public Response recommendProducts(@CookieParam("token") Cookie cookie){
 			NumberFormat currencyFormatter = NumberFormat.getCurrencyInstance();
-			UserService u = new UserService();
 			ProductService p = new ProductService();
-			User use=u.findOne(user);
+			UserService u = new UserService();
+			String token = cookie.getValue();
+			User use = u.findUserWithToken(token);
+			
 			String store= use.getMostShoppedAt();
 			String price=use.getMostSpent();
 //			store="Deserres";
