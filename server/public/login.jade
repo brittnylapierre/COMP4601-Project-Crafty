@@ -19,6 +19,7 @@ script(type='text/javascript').
 		$.post( "http://localhost:8080/COMP4601_FINAL_SERVER/authentication", { username: $('#usernameinput').val(), password: $('#passwordinput').val() }, function( data ) {
 			console.log(data.token);
 			Cookies.set('token', data.token);
+			window.location.href = "http://localhost:8080/COMP4601_FINAL_SERVER/crafty/dashboard";
 		});
 	});
 	
