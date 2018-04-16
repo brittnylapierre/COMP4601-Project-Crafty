@@ -18,6 +18,16 @@ script(type='text/javascript').
 			console.log( "error " + textStatus);
 		});
 	}
+	function setViewed(title){
+		$.ajax({
+			url: "http://localhost:8080/COMP4601_FINAL_SERVER/crafty/viewed",
+			type: 'POST',
+			data: {product:title}
+		}).done(function(data){
+			console.log(data);
+			console.log("viewed");
+		});
+	}
 	console.log(Cookies.get('token'));
 	$( document ).ready(function() {
 		$.getJSON("http://localhost:8080/COMP4601_FINAL_SERVER/crafty/watching", function(data){
@@ -35,7 +45,7 @@ script(type='text/javascript').
 							"<i>" + product.store + "</i>" +
 						"</h6>" +
 						"<p class='card-text color-secondary-2-0'>" + product.price + "</p>" +
-						"<a class='btn background-primary-2 btn-buy' target='_blank' href='"+product.url+"'>Buy</a>" +
+						"<a class='btn background-primary-2 btn-buy' target='_blank' href='"+product.url+"' onclick=\"setViewed('" + product.title + "')\">Buy</a>" +
 					"</div></div>";
 				});
 				dataString += "</div>";

@@ -193,6 +193,23 @@ public class UserService {
 		return null;
 	}
 	
+	public ArrayList<String> getUserWatchingList(String token){
+		BasicDBObject query = new BasicDBObject();
+		query.put("token", token);
+		BasicDBObject result = (BasicDBObject) userCollection.findOne(query);	
+
+		ArrayList<String> results = new ArrayList<String>();
+		if(result != null && !result.isEmpty()){
+			BasicDBList list = (BasicDBList) result.get("watching");
+			ArrayList<Product> res = new ArrayList<Product>();
+			for(Object el: list) {
+				String terms = (String) el;
+				results.add(terms);
+			}	
+		}
+		return results;
+	}
+	
 	public User checkToken(String token){
 		BasicDBObject query = new BasicDBObject();
 		query.put("token", token);

@@ -286,6 +286,26 @@ public class Server {
 			return Response.ok("{\"success\": true}").build();
 		}
 		
+		@GET
+		@Path("watchList")
+		@Produces({MediaType.APPLICATION_JSON})
+		public String watchList(@CookieParam("token") Cookie cookie){
+			String token = cookie.getValue();
+			UserService u = new UserService();
+			ArrayList<String> results = u.getUserWatchingList(token);
+			String resultString = "{ \"watching\": [";
+			int curr = 0;
+			for(String r : results){
+				resultString += "\""+r+"\"";
+				if(curr != results.size()-1){
+					resultString += ",";
+				}
+				curr++;
+			}
+			resultString += "]}";
+			return resultString;
+		}
+		
 		@DELETE
 		@Produces(MediaType.APPLICATION_JSON)
 		@Consumes("application/x-www-form-urlencoded;charset=UTF-8") 
